@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Afritech Intelligence Hub · AF_SACH · v6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D1B2A;--navy-mid:#1A2C3D;--navy-light:#243447;
+  --teal:#00B4D8;--teal-dim:#0096B4;--teal-glow:rgba(0,180,216,0.15);
+  --amber:#FFB703;--green:#06D6A0;--green-dim:#05B086;
+  --red:#EF476F;--kris-gold:#FFC857;
+  --bg:#0A1520;--surface:#111E2D;--surface-2:#172435;--surface-3:#1E2E3F;
+  --border:rgba(0,180,216,0.12);--border-2:rgba(255,255,255,0.06);
+  --text-1:#EEF2F7;--text-2:#8CA0B8;--text-3:#5A7291;
+  --sidebar-w:226px;--radius:12px;--radius-sm:8px;
+  --shadow-md:0 4px 20px rgba(0,0,0,0.18);
+}
+html{font-size:14px}
+body{background:var(--bg);color:var(--text-1);font-family:'Inter',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;line-height:1.5}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--navy-light);border-radius:4px}
+.mono{font-family:'JetBrains Mono',monospace}
+.shell{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ─────────────────────────────────────────── */
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--navy);display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden;flex-shrink:0}
+.sidebar-logo{padding:20px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-logo .pinwheel{width:30px;height:30px;flex-shrink:0}
+.brand{font-size:14px;font-weight:700;letter-spacing:.05em;color:#fff}
+.sub{font-size:9.5px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.sidebar-meta{padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-label{font-size:9.5px;color:var(--text-3)}
+.nav-section-label{padding:16px 18px 6px;font-size:9px;color:var(--text-3);letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 18px;cursor:pointer;transition:all .15s;border-left:3px solid transparent;font-size:12px;color:var(--text-2);user-select:none}
+.nav-item:hover{background:var(--teal-glow);color:var(--text-1)}
+.nav-item.active{background:var(--teal-glow);color:var(--teal);border-left-color:var(--teal);font-weight:600}
+.nav-icon{font-size:13px;width:16px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--teal);color:var(--navy);font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:10px}
+.sidebar-footer{margin-top:auto;padding:14px 16px;border-top:1px solid var(--border)}
+.dev-card{display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--surface-2);border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:8px}
+.dev-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--navy-mid),var(--teal));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;border:1.5px solid var(--green);flex-shrink:0}
+.dev-name{font-size:11.5px;font-weight:600;color:var(--text-1);line-height:1.3}
+.dev-role{font-size:9.5px;color:var(--text-3)}
+.kris-credit{font-size:9px;color:var(--kris-gold);display:flex;align-items:center;gap:5px;padding:0 2px;margin-bottom:6px}
+.sidebar-version{font-size:8.5px;color:var(--text-3);padding:0 2px}
+
+/* ── MAIN ─────────────────────────────────────────────── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── TOPBAR ───────────────────────────────────────────── */
+.topbar{height:58px;display:flex;align-items:center;padding:0 18px;background:var(--surface);border-bottom:1px solid var(--border);gap:10px;flex-shrink:0;flex-wrap:nowrap;overflow:hidden}
+.topbar-title{font-size:13px;font-weight:600;color:var(--text-1);white-space:nowrap;min-width:0}
+.topbar-subtitle{font-size:9.5px;color:var(--text-3);margin-top:1px;white-space:nowrap}
+.topbar-spacer{flex:1;min-width:4px}
+.slicer-group{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.slicer-label{font-size:8.5px;color:var(--text-3);font-weight:700;letter-spacing:.06em;white-space:nowrap;text-transform:uppercase}
+.tab-group{display:flex;gap:2px;background:var(--navy);padding:3px;border-radius:7px;border:1px solid var(--border)}
+.tab-btn{padding:4px 10px;border-radius:5px;font-size:9.5px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text-3);transition:all .15s;white-space:nowrap}
+.tab-btn:hover{color:var(--text-1)}
+.tab-btn.active{background:var(--teal);color:var(--navy);font-weight:700}
+.slicer-select{appearance:none;-webkit-appearance:none;background:var(--navy);border:1px solid var(--border);color:var(--teal);font-size:10px;font-family:'Inter',sans-serif;font-weight:700;cursor:pointer;outline:none;padding:4px 20px 4px 9px;border-radius:7px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath fill='%235A7291' d='M0 0l4 5 4-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
+.slicer-select option{background:var(--surface-2);color:var(--text-1)}
+.live-badge{display:flex;align-items:center;gap:5px;background:rgba(6,214,160,.1);border:1px solid rgba(6,214,160,.25);padding:4px 9px;border-radius:20px;font-size:9px;font-weight:700;color:var(--green);letter-spacing:.08em;flex-shrink:0}
+.live-badge.demo{background:rgba(255,183,3,.1);border-color:rgba(255,183,3,.25);color:var(--amber)}
+.live-badge.demo .live-dot{background:var(--amber)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+.btn-icon{width:28px;height:28px;border-radius:7px;background:var(--surface-2);border:1px solid var(--border-2);color:var(--text-2);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.btn-icon:hover{background:var(--surface-3);color:var(--teal);border-color:var(--teal)}
+.topbar-dev{display:flex;align-items:center;gap:7px;border-left:1px solid var(--border-2);padding-left:10px;cursor:default;flex-shrink:0}
+.topbar-dev .dev-av{width:26px;height:26px;font-size:10px}
+
+/* ── CONTENT ──────────────────────────────────────────── */
+.content{flex:1;overflow-y:auto;overflow-x:hidden}
+.page{display:none;padding:20px 24px 36px}
+.page.active{display:block}
+
+/* ── INFO ROW ─────────────────────────────────────────── */
+.info-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.info-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:var(--surface-2);border:1px solid var(--border-2);font-size:10px;color:var(--text-3)}
+.info-chip span{color:var(--text-1);font-weight:600}
+.info-chip.live-chip{border-color:rgba(0,180,216,.3)}
+
+/* ── CEO INSIGHT ──────────────────────────────────────── */
+.alert-strip{display:flex;align-items:flex-start;gap:10px;padding:11px 16px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:12px;line-height:1.6}
+.alert-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.alert-strip.warning{background:rgba(255,183,3,.07);border:1px solid rgba(255,183,3,.2);color:var(--text-2)}
+.alert-strip.warning strong{color:var(--amber)}
+.alert-strip.info{background:rgba(0,180,216,.06);border:1px solid rgba(0,180,216,.16);color:var(--text-2)}
+.alert-strip.info strong{color:var(--teal)}
+.alert-strip.ok{background:rgba(6,214,160,.06);border:1px solid rgba(6,214,160,.16);color:var(--text-2)}
+.alert-strip.ok strong{color:var(--green)}
+
+/* ── SECTION ──────────────────────────────────────────── */
+.section-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:11px;gap:10px}
+.section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2);display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:inline-block;width:3px;height:13px;background:var(--teal);border-radius:2px;flex-shrink:0}
+.section-source{font-size:9.5px;color:var(--text-3);font-style:italic}
+
+/* ── GRIDS ────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:20px}
+.col-2{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-bottom:16px}
+.col-2e{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.col-3{display:grid;grid-template-columns:1.7fr 1fr .95fr;gap:14px;margin-bottom:16px}
+.col-4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+
+/* ── KPI CARDS ────────────────────────────────────────── */
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px 13px;position:relative;overflow:hidden;transition:box-shadow .18s,transform .18s}
+.kpi-card:hover{box-shadow:0 0 0 1px var(--teal),var(--shadow-md);transform:translateY(-1px)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2.5px}
+.kpi-card.accent-teal::before{background:var(--teal)}
+.kpi-card.accent-green::before{background:var(--green)}
+.kpi-card.accent-amber::before{background:var(--amber)}
+.kpi-card.accent-red::before{background:var(--red)}
+.kpi-card.accent-new::before{background:linear-gradient(90deg,var(--amber),var(--teal))}
+.new-tag{position:absolute;top:9px;right:10px;font-size:8px;font-weight:700;background:rgba(0,180,216,.18);color:var(--teal);padding:1px 7px;border-radius:10px;letter-spacing:.04em}
+.kpi-label{font-size:10px;color:var(--text-3);letter-spacing:.07em;text-transform:uppercase;font-weight:600;margin-bottom:7px}
+.kpi-value{font-size:21px;font-weight:700;color:var(--text-1);letter-spacing:-.01em;line-height:1.1;font-family:'JetBrains Mono',monospace}
+.kpi-value.sm{font-size:15px;font-family:'Inter',sans-serif}
+.kpi-value.green{color:var(--green)}.kpi-value.amber{color:var(--amber)}.kpi-value.red{color:var(--red)}.kpi-value.teal{color:var(--teal)}
+.kpi-trend{display:flex;align-items:center;gap:4px;margin-top:7px;font-size:10px}
+.trend-up{color:var(--green)}.trend-down{color:var(--red)}.trend-flat{color:var(--text-3)}
+.kpi-src{font-size:8.5px;color:var(--text-3);margin-top:5px;font-family:'JetBrains Mono',monospace;opacity:.85}
+.target-bar-track{height:5px;background:var(--surface-3);border-radius:4px;overflow:hidden}
+.target-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.target-bar-label{display:flex;justify-content:space-between;font-size:9px;color:var(--text-3);margin-top:4px}
+
+/* ── CHART PANEL ──────────────────────────────────────── */
+.chart-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 17px;margin-bottom:0;overflow:hidden;min-width:0}
+.chart-panel *{max-width:100%}
+.chart-card-pad{padding:0!important}
+.chart-card-pad .panel-head{padding:14px 17px 11px;border-bottom:1px solid var(--border-2)}
+.panel-head{margin-bottom:12px}
+.legend{display:flex;gap:13px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-3)}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.legend-line{width:16px;height:2px;flex-shrink:0;border-radius:1px}
+.chart-wrap{width:100%;overflow:hidden;position:relative}
+svg.chart{width:100%;display:block;overflow:hidden}
+
+/* ── TOOLTIP ──────────────────────────────────────────── */
+.tooltip{position:fixed;background:var(--navy);color:#fff;padding:8px 12px;border-radius:8px;font-size:11.5px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:9999;white-space:nowrap;box-shadow:0 6px 24px rgba(0,0,0,.45);border:1px solid rgba(0,180,216,0.25);line-height:1.6}
+.tooltip-val{font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--teal)}
+.tooltip-sub{color:var(--text-3);font-size:10.5px}
+
+/* ── TABLES ───────────────────────────────────────────── */
+.data-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.data-table th{text-align:left;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);padding:8px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table td{padding:9px 12px;border-bottom:1px solid var(--border-2);color:var(--text-2);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--surface-2)}
+.data-table td:first-child{font-weight:500;color:var(--text-1)}
+.data-table .num{font-variant-numeric:tabular-nums;text-align:right;font-family:'JetBrains Mono',monospace}
+.sp-wrap{display:flex;align-items:center;gap:6px}
+.sp-track{width:50px;height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden}
+.sp-fill{height:100%;border-radius:3px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700}
+.badge-green{background:rgba(6,214,160,.12);color:var(--green)}
+.badge-teal{background:rgba(0,180,216,.12);color:var(--teal)}
+.badge-amber{background:rgba(255,183,3,.12);color:var(--amber)}
+.badge-red{background:rgba(239,71,111,.12);color:var(--red)}
+
+/* ── DONUT ────────────────────────────────────────────── */
+.donut-wrap{display:flex;align-items:center;gap:16px;overflow:hidden}
+.donut-legend{display:flex;flex-direction:column;gap:9px;min-width:0;flex:1}
+.legend-val{margin-left:auto;padding-left:10px;font-weight:700;color:var(--text-1);font-size:12px;font-family:'JetBrains Mono',monospace}
+.legend-sub{font-size:9px;color:var(--text-3)}
+.donut-foot{margin-top:9px;padding-top:9px;border-top:1px solid var(--border-2)}
+
+/* ── FUNNEL (fixed overflow) ──────────────────────────── */
+.funnel-wrap{display:flex;flex-direction:column;gap:6px;padding:4px 0;width:100%;overflow:hidden}
+.funnel-stage{display:flex;align-items:center;gap:7px;width:100%;min-width:0}
+.funnel-lbl{width:100px;min-width:100px;font-size:10px;color:var(--text-2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.funnel-bar-wrap{flex:1;min-width:0;overflow:hidden}
+.funnel-bar{height:26px;border-radius:4px;display:flex;align-items:center;padding-left:8px;transition:width .6s;cursor:pointer;overflow:hidden;max-width:100%}
+.funnel-bar span{font-size:9.5px;font-weight:600;color:rgba(255,255,255,.9);white-space:nowrap}
+.funnel-val{width:76px;min-width:76px;font-size:9.5px;color:var(--text-3);text-align:right;font-family:'JetBrains Mono',monospace;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── MINI FUNNELS ─────────────────────────────────────── */
+.mf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.mf-card{background:var(--surface-2);border:1px solid var(--border-2);border-radius:9px;padding:11px 12px;overflow:hidden}
+.mf-title{font-size:10.5px;font-weight:600;color:var(--text-1);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mf-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.mf-lbl{font-size:9.5px;color:var(--text-3);min-width:50px;flex-shrink:0}
+.mf-track{flex:1;height:13px;background:var(--surface-3);border-radius:2px;overflow:hidden;min-width:0}
+.mf-fill{height:100%;border-radius:2px}
+.mf-val{font-size:9px;color:var(--text-3);min-width:46px;text-align:right;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
+/* ── HBARS ────────────────────────────────────────────── */
+.hbar-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;cursor:pointer;overflow:hidden}
+.hbar-lbl{min-width:90px;max-width:90px;font-size:11px;font-weight:500;color:var(--text-2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.hbar-track{flex:1;background:var(--surface-3);border-radius:4px;height:24px;overflow:hidden;min-width:0}
+.hbar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:9px;transition:width .6s;overflow:hidden}
+.hbar-fill span{font-size:10px;font-weight:600;color:rgba(255,255,255,.9);white-space:nowrap}
+.hbar-pct{min-width:36px;font-size:10.5px;font-weight:700;text-align:right;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
+/* ── MACHINES ─────────────────────────────────────────── */
+.machine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.machine-card{background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;padding:12px 13px;transition:box-shadow .15s;overflow:hidden}
+.machine-card:hover{box-shadow:var(--shadow-md)}
+.machine-id{font-size:12.5px;font-weight:700;color:var(--text-1);display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.machine-metric{display:flex;justify-content:space-between;margin-bottom:5px}
+.machine-key{font-size:9.5px;color:var(--text-3)}
+.machine-val{font-size:10.5px;font-weight:600;font-family:'JetBrains Mono',monospace}
+.machine-bar-track{height:4px;background:var(--surface-3);border-radius:2px;margin-bottom:7px;overflow:hidden}
+.machine-bar-fill{height:100%;border-radius:2px;transition:width 1s}
+
+/* ── POWER ────────────────────────────────────────────── */
+.power-card{background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;padding:12px;margin-bottom:8px}
+.power-label{font-size:10px;color:var(--text-3);text-transform:uppercase;margin-bottom:6px}
+.power-val{font-size:19px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.power-sub{font-size:10px;color:var(--text-3);margin-top:4px;line-height:1.5}
+.prog-track{height:6px;background:var(--surface-3);border-radius:4px;overflow:hidden;margin-top:6px}
+.prog-fill{height:100%;border-radius:4px;transition:width .8s}
+
+/* ── FINDING BOX ──────────────────────────────────────── */
+.finding-box{border-radius:8px;padding:10px 12px;font-size:11px;line-height:1.6;margin-top:10px;overflow:hidden}
+.finding-box.ok{background:rgba(6,214,160,.07);border-left:3px solid var(--green);color:var(--text-2)}
+.finding-box.warn{background:rgba(255,183,3,.07);border-left:3px solid var(--amber);color:var(--text-2)}
+.finding-box.info{background:rgba(0,180,216,.07);border-left:3px solid var(--teal);color:var(--text-2)}
+.finding-box strong{color:var(--text-1)}
+
+.table-foot{padding:11px 16px;background:var(--surface-2);border-top:1px solid var(--border-2);font-size:10.5px;color:var(--text-3);border-radius:0 0 var(--radius) var(--radius)}
+.table-foot strong{color:var(--text-1)}
+
+/* ── OVERVIEW PAGE ────────────────────────────────────── */
+.ov-hero{background:linear-gradient(135deg,var(--navy-mid) 0%,rgba(0,180,216,.08) 100%);border:1px solid var(--border);border-radius:var(--radius);padding:28px 30px 24px;margin-bottom:20px;position:relative;overflow:hidden}
+.ov-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(0,180,216,.06) 0%,transparent 70%)}
+.ov-hero-eyebrow{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.ov-hero-eyebrow::after{content:'';flex:1;height:1px;background:var(--border)}
+.ov-hero-title{font-size:22px;font-weight:700;color:var(--text-1);letter-spacing:-.01em;line-height:1.2;margin-bottom:14px}
+.ov-hero-title span{color:var(--teal)}
+.ov-hero-body{font-size:12.5px;color:var(--text-2);line-height:1.75;max-width:820px}
+.ov-section-label{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin:22px 0 12px;display:flex;align-items:center;gap:8px}
+.ov-section-label::after{content:'';flex:1;height:1px;background:var(--border-2)}
+.phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 17px;position:relative;overflow:hidden;transition:box-shadow .18s}
+.phase-card:hover{box-shadow:var(--shadow-md)}
+.phase-card.active-phase{border-color:rgba(0,180,216,.35)}
+.phase-card.active-phase::before{content:'';position:absolute;top:0;left:0;width:100%;height:2.5px;background:linear-gradient(90deg,var(--teal),var(--green))}
+.phase-card.pending-phase{opacity:.5}
+.phase-card.pending-phase::before{content:'';position:absolute;top:0;left:0;width:100%;height:2.5px;background:var(--surface-3)}
+.phase-num{font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px}
+.phase-icon{font-size:22px;margin-bottom:8px}
+.phase-name{font-size:13.5px;font-weight:700;color:var(--text-1);margin-bottom:5px}
+.phase-desc{font-size:10.5px;color:var(--text-3);line-height:1.55;margin-bottom:10px}
+.phase-status-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px}
+.phase-status-badge.live{background:rgba(6,214,160,.12);color:var(--green);border:1px solid rgba(6,214,160,.25)}
+.phase-status-badge.pending{background:var(--surface-2);color:var(--text-3);border:1px solid var(--border-2)}
+.ov-roadmap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}
+.ov-roadmap-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.ov-roadmap-title::before{content:'';display:inline-block;width:3px;height:13px;background:var(--green);border-radius:2px}
+.ov-roadmap-body{font-size:12px;color:var(--text-2);line-height:1.75}
+.ov-focus-card{background:linear-gradient(135deg,rgba(0,180,216,.05),rgba(6,214,160,.04));border:1px solid rgba(0,180,216,.2);border-radius:var(--radius);padding:20px 22px}
+.ov-focus-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.ov-focus-title::before{content:'';display:inline-block;width:3px;height:13px;background:var(--teal);border-radius:2px}
+.ov-focus-body{font-size:12px;color:var(--text-2);line-height:1.75}
+.ov-modules-row{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.ov-module-item{display:flex;align-items:flex-start;gap:9px;font-size:11px;color:var(--text-2);padding:6px 0;border-bottom:1px solid var(--border-2)}
+.ov-module-item:last-child{border-bottom:none}
+.ov-module-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0;margin-top:4px}
+.ov-module-dot.green{background:var(--green)}
+.ov-version-strip{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:var(--radius-sm);margin-top:14px;font-size:10px;color:var(--text-3);flex-wrap:wrap}
+.ov-version-strip span{color:var(--text-1);font-weight:600}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media(max-width:1300px){.col-3{grid-template-columns:1fr 1fr}.col-3>:first-child{grid-column:1/-1}}
+@media(max-width:980px){.sidebar{width:60px;min-width:60px}.brand,.sub,.nav-section-label,.nav-item>span:not(.nav-icon),.dev-name,.dev-role,.kris-credit,.sidebar-version{display:none}.sidebar-logo{justify-content:center}.dev-card{justify-content:center}}
+@media(max-width:720px){.col-2,.col-2e,.col-3{grid-template-columns:1fr}.phase-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="tooltip" id="tt"></div>
+<div class="shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg class="pinwheel" viewBox="0 0 22 22" fill="none">
+        <path d="M11 11L11 2A9 9 0 0118.36 6.5Z" fill="#06D6A0"/>
+        <path d="M11 11L18.36 6.5A9 9 0 0118.36 15.5Z" fill="#00B4D8"/>
+        <path d="M11 11L18.36 15.5A9 9 0 013.64 15.5Z" fill="#0096B4"/>
+        <path d="M11 11L3.64 15.5A9 9 0 0111 2Z" fill="#05B086"/>
+      </svg>
+      <div><div class="brand">AFRITECH</div><div class="sub">Intelligence Hub</div></div>
+    </div>
+    <div class="sidebar-meta"><div class="sync-dot"></div><div class="sync-label" id="sync-lbl">Live data</div></div>
+    <div class="nav-section-label">Overview</div>
+    <div class="nav-item active" id="nav-overview" onclick="switchPage('overview')"><span class="nav-icon">⬡</span><span>Overview</span></div>
+    <div class="nav-section-label">Sales · AF_SACH</div>
+    <div class="nav-item" id="nav-sales1" onclick="switchPage('sales1')"><span class="nav-icon">₦</span><span>Revenue & Targets</span><span class="nav-badge">DD1</span></div>
+    <div class="nav-item" id="nav-sales2" onclick="switchPage('sales2')"><span class="nav-icon">👥</span><span>Customers & People</span><span class="nav-badge">DD2</span></div>
+    <div class="nav-section-label">Production · AF_SACH</div>
+    <div class="nav-item" id="nav-prod1" onclick="switchPage('prod1')"><span class="nav-icon">⚙</span><span>Shift & Output</span><span class="nav-badge">DD1</span></div>
+    <div class="nav-item" id="nav-prod2" onclick="switchPage('prod2')"><span class="nav-icon">◉</span><span>Yield & Waste</span><span class="nav-badge">DD2</span></div>
+    <div class="sidebar-footer">
+      <div class="dev-card"><div class="dev-av">KE</div><div><div class="dev-name">Kris Eyo</div><div class="dev-role">Data Intelligence Lead</div></div></div>
+      <div class="kris-credit">✦ <span>KrisBrain Innovations · #KrisDiary</span></div>
+      <div class="sidebar-version">v6.0 · Afritech Multi Concepts Ltd · Lagos</div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+    <div class="topbar">
+      <div style="min-width:0"><div class="topbar-title" id="tb-title">Overview — Afritech Intelligence Hub</div><div class="topbar-subtitle" id="tb-sub">AF_SACH · Sachet Water Line</div></div>
+      <div class="topbar-spacer"></div>
+      <div class="slicer-group"><span class="slicer-label">PERIOD</span>
+        <div class="tab-group" id="period-tabs">
+          <button class="tab-btn active" onclick="setPeriod('all',this)">All Period</button>
+          <button class="tab-btn" onclick="setPeriod('month',this)">This Month</button>
+          <button class="tab-btn" onclick="setPeriod('week',this)">This Week</button>
+          <button class="tab-btn" onclick="setPeriod('today',this)">Today</button>
+        </div>
+      </div>
+      <div class="slicer-group"><span class="slicer-label">BATCH</span>
+        <select class="slicer-select" id="batch-sel" onchange="setBatch(this.value)"><option value="all">All Batches</option></select>
+      </div>
+      <div class="live-badge" id="live-badge"><div class="live-dot"></div><span id="live-txt">LOADING</span></div>
+      <div class="btn-icon" title="Refresh data" onclick="loadData()">↻</div>
+      <div class="topbar-dev"><div class="dev-av" style="width:26px;height:26px;font-size:10px">KE</div><div><div style="font-size:11.5px;font-weight:600;color:var(--text-1)">Kris Eyo</div><div style="font-size:9.5px;color:var(--text-3)">Data Intelligence Lead</div></div></div>
+    </div>
+
+    <div class="content">
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 0 · PROJECT OVERVIEW & STRATEGY
+     ════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-overview">
+
+  <!-- Hero Narrative -->
+  <div class="ov-hero">
+    <div class="ov-hero-eyebrow">Afritech Multi Concepts Ltd · Intelligence Hub · v6.0</div>
+    <div class="ov-hero-title">Centralised Manufacturing Intelligence<br>for <span>Bida Operations</span></div>
+    <div class="ov-hero-body">
+      The Afritech Intelligence Hub is an enterprise-grade operational reporting and data pipeline ecosystem designed to unify manufacturing performance, sales metrics, and compliance tracking across multiple industrial facilities. By migrating from fragmented, manually handled spreadsheets to an automated, centralized architecture, the platform provides real-time data visibility, mitigates operational waste, and drives margin expansion.
+    </div>
+  </div>
+
+  <!-- Phase Status Cards -->
+  <div class="ov-section-label">Factory Lines — Deployment Phase Status</div>
+  <div class="phase-grid">
+    <div class="phase-card active-phase">
+      <div class="phase-num">Phase 1 · Active</div>
+      <div class="phase-icon">💧</div>
+      <div class="phase-name">Sachet Water</div>
+      <div class="phase-desc">Full data pipeline live. Daily production counts, raw material utilisation, machine downtime, fuel/utility logs, and direct field distribution metrics are processed and reported.</div>
+      <div class="phase-status-badge live"><span>●</span> Live · AF_SACH</div>
+    </div>
+    <div class="phase-card pending-phase">
+      <div class="phase-num">Phase 2 · Upcoming</div>
+      <div class="phase-icon">🍞</div>
+      <div class="phase-name">Bakery Production</div>
+      <div class="phase-desc">Pending onboarding. Will cover batch yield, ingredient consumption, oven efficiency, and SKU-level production output tracking.</div>
+      <div class="phase-status-badge pending">Pending Onboarding</div>
+    </div>
+    <div class="phase-card pending-phase">
+      <div class="phase-num">Phase 3 · Upcoming</div>
+      <div class="phase-icon">🫙</div>
+      <div class="phase-name">Bottled Water</div>
+      <div class="phase-desc">Pending onboarding. Will track filling line efficiency, cap-seal reject rates, and volume output across bottle formats and shift runs.</div>
+      <div class="phase-status-badge pending">Pending Onboarding</div>
+    </div>
+    <div class="phase-card pending-phase">
+      <div class="phase-num">Phase 4 · Upcoming</div>
+      <div class="phase-icon">🌾</div>
+      <div class="phase-name">Rice Processing</div>
+      <div class="phase-desc">Pending onboarding. Will monitor milling throughput, grade-separation ratios, moisture readings, and packaging line output by shift.</div>
+      <div class="phase-status-badge pending">Pending Onboarding</div>
+    </div>
+  </div>
+
+  <!-- Two-column: Current Focus + Future Roadmap -->
+  <div class="col-2e" style="margin-bottom:0">
+    <div class="ov-focus-card">
+      <div class="ov-focus-title">Current Execution — Phase 1: Sachet Water</div>
+      <div class="ov-focus-body">
+        Our current execution deployment focuses entirely on Phase 1: Sachet Water operations. This analytical module processes daily production counts, raw material utilisation, machine downtime events, fuel/utility logs, and direct field distribution metrics. It provides leadership with granular visibility into exact yield percentages, batch variances, and shift-by-shift profitability metrics.
+      </div>
+      <div class="ov-modules-row">
+        <div class="ov-module-item"><div class="ov-module-dot green"></div><div><strong style="color:var(--text-1)">Revenue & Targets (DD1)</strong> — Daily and weekly revenue trends, bag-to-target tracking, cash vs bank split, and sales flow funnel.</div></div>
+        <div class="ov-module-item"><div class="ov-module-dot green"></div><div><strong style="color:var(--text-1)">Customers & People (DD2)</strong> — Customer revenue rankings, sales-person performance, price intelligence, and outstanding debt monitoring.</div></div>
+        <div class="ov-module-item"><div class="ov-module-dot green"></div><div><strong style="color:var(--text-1)">Shift & Output (DD1)</strong> — Shift-level production counts, morning vs night split, supervisor rankings, and power-source dependency tracking.</div></div>
+        <div class="ov-module-item"><div class="ov-module-dot green"></div><div><strong style="color:var(--text-1)">Yield & Waste (DD2)</strong> — Roll-level yield percentages, OEE metrics, film utilisation efficiency, waste trends, and machine grid performance.</div></div>
+      </div>
+    </div>
+    <div class="ov-roadmap-card">
+      <div class="ov-roadmap-title">Future Roadmap Deliverables</div>
+      <div class="ov-roadmap-body">
+        As part of the continuous rollout strategy, future modules will scale horizontally to bring the remaining factory lines online. Upcoming deployments include Phase 2: Bakery Production lines, Phase 3: Bottled Water assets, and Phase 4: Rice Processing facilities. These will share the same centralised data infrastructure to deliver a single source of truth across all business verticals.
+      </div>
+      <div class="ov-modules-row" style="margin-top:14px">
+        <div class="ov-module-item"><div class="ov-module-dot"></div><div><strong style="color:var(--text-1)">Shared Infrastructure</strong> — All phases feed a unified Google Apps Script data pipeline with a single API endpoint delivering normalised JSON to this dashboard.</div></div>
+        <div class="ov-module-item"><div class="ov-module-dot"></div><div><strong style="color:var(--text-1)">Automated Alerting</strong> — Anomaly detection (>40% KPI drop vs 7-day average) triggers instant email alerts across all factory lines as they onboard.</div></div>
+        <div class="ov-module-item"><div class="ov-module-dot"></div><div><strong style="color:var(--text-1)">Cross-Factory Comparison</strong> — The Overview page will evolve into a live multi-line performance matrix once Phases 2–4 are onboarded.</div></div>
+        <div class="ov-module-item"><div class="ov-module-dot"></div><div><strong style="color:var(--text-1)">Data Governance</strong> — 30-day rolling RAW_LOG retention, 90-day archive sweep, and schema registry ensure compliance and auditability across all lines.</div></div>
+      </div>
+      <div class="ov-version-strip">
+        <span>Architecture:</span> Google Forms → Sheets → Apps Script → GitHub Pages
+        <span style="margin-left:auto">Data source:</span> AF_SACH · Hub Sheet
+        <span>Build:</span> v6.0 · 2026
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-overview -->
+
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 1 · SALES DD1 — REVENUE & TARGETS
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="page-sales1">
+  <div class="info-row">
+    <div class="info-chip live-chip">📅 <span id="s1-period">All Period</span></div>
+    <div class="info-chip">🏭 <span>Afri-Sachet Water · Bida</span></div>
+    <div class="info-chip">📆 <span id="s1-days">— days</span></div>
+    <div class="info-chip">🔄 Source: <span>SACH_KPI_SALES + SACH_SALES_CLEAN</span></div>
+  </div>
+  <div class="alert-strip warning" id="s1-insight"><div class="alert-icon">⚠</div><div id="s1-itxt">Loading…</div></div>
+  <div class="section-row"><div class="section-title">Key Revenue Metrics</div></div>
+  <div class="kpi-grid" style="margin-bottom:20px">
+    <div class="kpi-card accent-teal"><div class="kpi-label">₦ Total Revenue</div><div class="kpi-value" id="s1-rev">—</div><div class="kpi-trend trend-flat" id="s1-rev-tr">—</div><div class="kpi-src">Total_Revenue</div></div>
+    <div class="kpi-card accent-teal"><div class="kpi-label">📈 Avg Daily Revenue</div><div class="kpi-value" id="s1-avgrev">—</div><div class="kpi-trend" id="s1-avgrev-tr">—</div><div class="kpi-src">Total_Revenue / Days</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">📦 Total Bags Sold</div><div class="kpi-value" id="s1-bags">—</div><div class="kpi-trend trend-flat" id="s1-bags-tr">—</div><div class="kpi-src">Bags_Sold</div></div>
+    <div class="kpi-card accent-teal"><div class="kpi-label">💰 Avg Price / Bag</div><div class="kpi-value" id="s1-price">—</div><div class="kpi-trend trend-flat">Range ₦170–₦280</div><div class="kpi-src">Avg_Price</div></div>
+    <div class="kpi-card accent-new"><div class="new-tag">LIVE</div><div class="kpi-label">✓ Collection Rate</div><div class="kpi-value green" id="s1-coll">—</div><div class="kpi-trend" id="s1-coll-tr">—</div><div class="kpi-src">Collection_Rate_Pct</div></div>
+    <div class="kpi-card accent-new"><div class="new-tag">LIVE</div><div class="kpi-label">📊 Bags vs Target</div><div class="kpi-value" id="s1-btgt">—</div><div class="kpi-trend trend-down" id="s1-btgt-tr">—</div><div class="kpi-src">Bags / Cumulative_Target</div></div>
+  </div>
+
+  <div class="section-row"><div class="section-title">Revenue Performance</div></div>
+  <div class="col-3" style="margin-bottom:14px">
+    <!-- Weekly/Daily adaptive revenue chart -->
+    <div class="chart-panel">
+      <div class="section-row"><div><div class="section-title" id="s1-daily-title">Revenue — Weekly Summary</div><div class="section-source" id="s1-daily-src">Weekly aggregation · daily drill-in for This Week / Today</div></div>
+        <div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Revenue</div><div class="legend-item"><div class="legend-line" style="border-top:2px dashed var(--amber);height:0;width:20px"></div>Target</div></div>
+      </div>
+      <div class="chart-wrap" id="s1-daily-chart"></div>
+    </div>
+    <!-- Target achievement -->
+    <div class="chart-panel">
+      <div class="section-row"><div><div class="section-title">Target Achievement</div><div class="section-source">Best week vs target</div></div></div>
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><div style="font-size:11px;font-weight:500">Revenue Achievement</div><div class="mono" style="font-size:15px;font-weight:700;color:var(--teal)" id="s1-rev-pct">—</div></div>
+        <div class="target-bar-track"><div class="target-bar-fill" id="s1-rev-bar" style="width:0%;background:var(--teal)"></div></div>
+        <div class="target-bar-label"><span>₦0</span><span id="s1-rev-best">—</span><span>Target ₦5M/wk</span></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><div style="font-size:11px;font-weight:500">Bags Achievement</div><div class="mono" style="font-size:15px;font-weight:700;color:var(--green)" id="s1-bags-pct">—</div></div>
+        <div class="target-bar-track"><div class="target-bar-fill" id="s1-bags-bar" style="width:0%;background:var(--green)"></div></div>
+        <div class="target-bar-label"><span>0</span><span id="s1-bags-best">—</span><span>Target 24.5K/wk</span></div>
+      </div>
+      <div class="finding-box info" id="s1-finding">Calculating…</div>
+    </div>
+    <!-- Cash vs Bank Donut -->
+    <div class="chart-panel">
+      <div class="section-row"><div class="section-title">Cash vs Bank Split</div></div>
+      <div class="donut-wrap">
+        <div id="s1-donut" style="flex-shrink:0"></div>
+        <div class="donut-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div><div><div style="font-size:12px;font-weight:600">Cash</div><div class="legend-sub" id="s1-cash-sub">—</div></div><div class="legend-val" id="s1-cash-pct">—</div></div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><div><div style="font-size:12px;font-weight:600">Bank Transfer</div><div class="legend-sub" id="s1-bank-sub">—</div></div><div class="legend-val" id="s1-bank-pct">—</div></div>
+          <div class="donut-foot"><div class="section-source" style="font-style:normal">Collection Rate</div><div style="font-size:17px;font-weight:700;color:var(--green)" class="mono" id="s1-coll-disp">—</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-2">
+    <div class="chart-panel"><div class="section-row"><div><div class="section-title">Weekly Revenue vs ₦5M Target</div><div class="section-source" id="s1-wk-src">All weeks</div></div></div><div class="chart-wrap" id="s1-weekly-chart"></div></div>
+    <!-- Sales Funnel — overflow-safe -->
+    <div class="chart-panel"><div class="section-row"><div><div class="section-title">Sales Flow Funnel</div><div class="section-source">Bags → Collection · selected period</div></div></div><div class="funnel-wrap" id="s1-funnel"></div></div>
+  </div>
+</div><!-- /page-sales1 -->
+
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 2 · SALES DD2 — CUSTOMERS & PEOPLE
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="page-sales2">
+  <div class="info-row">
+    <div class="info-chip live-chip">📅 <span id="s2-period">All Period</span></div>
+    <div class="info-chip">👥 <span id="s2-custs">— Active Customers</span></div>
+    <div class="info-chip">🧑‍💼 <span>3 Sales Persons</span></div>
+    <div class="info-chip">🔄 Source: <span>SACH_SALES_CLEAN</span></div>
+  </div>
+  <div class="alert-strip info" id="s2-insight"><div class="alert-icon">💡</div><div id="s2-itxt">Loading…</div></div>
+  <div class="section-row"><div class="section-title">Customer & People Metrics</div></div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+    <div class="kpi-card accent-teal"><div class="kpi-label">🚌 Top Customer</div><div class="kpi-value sm" id="s2-topcust">—</div><div class="kpi-trend trend-flat" id="s2-topcust-tr">—</div><div class="kpi-src">Customer · Revenue</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">🧑‍💼 Top Sales Person</div><div class="kpi-value sm" id="s2-topsp">—</div><div class="kpi-trend trend-up" id="s2-topsp-tr">—</div><div class="kpi-src">Sales_Person</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">✓ Outstanding Debt</div><div class="kpi-value green" id="s2-debt">—</div><div class="kpi-trend" id="s2-debt-tr">—</div><div class="kpi-src">Outstanding_Amount</div></div>
+    <div class="kpi-card accent-teal"><div class="kpi-label">👥 Active Customers</div><div class="kpi-value" id="s2-custcnt">—</div><div class="kpi-trend trend-flat">Across all routes</div><div class="kpi-src">Unique_Customers</div></div>
+  </div>
+
+  <div class="section-row"><div class="section-title">Customer & Sales Person Breakdown</div></div>
+  <div class="col-2e" style="margin-bottom:16px">
+    <div class="chart-panel"><div class="section-row"><div><div class="section-title">Revenue by Customer</div><div class="section-source">Ranked · selected period · ₦ share %</div></div></div><div class="chart-wrap" id="s2-cust-chart"></div></div>
+    <div class="chart-panel chart-card-pad">
+      <div class="panel-head"><div class="section-row" style="margin-bottom:0"><div><div class="section-title">Sales Person Performance</div><div class="section-source">Revenue · Bags · Share</div></div></div></div>
+      <table class="data-table"><thead><tr><th>Person</th><th>Revenue</th><th>Bags</th><th>Share</th><th>Status</th></tr></thead><tbody id="s2-sp-tbl"></tbody></table>
+      <div class="table-foot" id="s2-sp-foot">Calculating…</div>
+    </div>
+  </div>
+
+  <div class="section-row"><div class="section-title">Price Intelligence · Customer Funnels</div></div>
+  <div class="col-2e">
+    <div class="chart-panel"><div class="section-row"><div><div class="section-title">Avg Price per Bag — Daily Trend</div><div class="section-source">₦170 floor · ₦280 ceiling reference bands</div></div></div><div class="chart-wrap" id="s2-price-chart"></div></div>
+    <div class="chart-panel"><div class="section-row"><div><div class="section-title">Customer Revenue Funnels</div><div class="section-source">Bags → Revenue · Per customer</div></div></div><div class="mf-grid" id="s2-funnels"></div></div>
+  </div>
+</div><!-- /page-sales2 -->
+
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 3 · PROD DD1 — SHIFT & OUTPUT
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="page-prod1">
+  <div class="info-row">
+    <div class="info-chip live-chip">📅 <span id="p1-period">All Period</span></div>
+    <div class="info-chip">🏭 <span>Afri-Sachet Water · Bida</span></div>
+    <div class="info-chip">📦 <span id="p1-days">— production days</span></div>
+    <div class="info-chip">🔄 Source: <span>SACH_KPI_PRODUCTION + SACH_SHIFT_CLEAN</span></div>
+  </div>
+  <div class="alert-strip warning" id="p1-insight"><div class="alert-icon">⚠</div><div id="p1-itxt">Loading…</div></div>
+  <div class="section-row"><div class="section-title">Key Production Metrics</div></div>
+  <div class="kpi-grid" style="margin-bottom:20px">
+    <div class="kpi-card accent-teal"><div class="kpi-label">📦 Total Bags Produced</div><div class="kpi-value" id="p1-bags">—</div><div class="kpi-trend trend-flat" id="p1-bags-tr">—</div><div class="kpi-src">Total_Production</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">📈 Avg Daily Output</div><div class="kpi-value" id="p1-avgout">—</div><div class="kpi-trend" id="p1-avgout-tr">▼ vs ~3,500 needed</div><div class="kpi-src">Total_Production / Days</div></div>
+    <div class="kpi-card accent-teal"><div class="kpi-label">🏆 Best Single Day</div><div class="kpi-value" id="p1-best">—</div><div class="kpi-trend trend-flat" id="p1-best-tr">—</div><div class="kpi-src">Max(Total_Production)</div></div>
+    <div class="kpi-card accent-red"><div class="kpi-label">⚠ Zero-Prod Days</div><div class="kpi-value red" id="p1-zero">—</div><div class="kpi-trend trend-down" id="p1-zero-tr">—</div><div class="kpi-src">Zero_Production_Flag</div></div>
+    <div class="kpi-card accent-teal"><div class="kpi-label">🌗 Morning vs Night</div><div class="kpi-value sm" id="p1-shift">—</div><div class="kpi-trend trend-flat" id="p1-shift-tr">—</div><div class="kpi-src">Morning / Night_Production</div></div>
+    <div class="kpi-card accent-new"><div class="new-tag">LIVE</div><div class="kpi-label">📊 Bags vs Target</div><div class="kpi-value" id="p1-ptgt">—</div><div class="kpi-trend trend-down" id="p1-ptgt-tr">—</div><div class="kpi-src">Total_Production / Cum_Target</div></div>
+  </div>
+
+  <div class="section-row"><div class="section-title">Output Trend & Power Source</div></div>
+  <div class="col-3" style="margin-bottom:14px">
+    <!-- Adaptive production chart -->
+    <div class="chart-panel">
+      <div class="section-row"><div><div class="section-title" id="p1-daily-title">Production — Weekly Summary</div><div class="section-source" id="p1-daily-src">Weekly aggregation · daily drill-in for This Week / Today</div></div>
+        <div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Output</div><div class="legend-item"><div class="legend-dot" style="background:var(--teal-dim)"></div>Zero day</div></div>
+      </div>
+      <div class="chart-wrap" id="p1-daily-chart"></div>
+      <div class="finding-box info" id="p1-daily-finding">Analysing production trend…</div>
+    </div>
+    <!-- Power source -->
+    <div class="chart-panel">
+      <div class="section-row"><div class="section-title">Power Source Split</div><div class="section-source">NEPA vs Generator</div></div>
+      <div class="power-card" style="background:rgba(0,180,216,.07);border-color:rgba(0,180,216,.18)"><div class="power-label">🔌 NEPA (Grid Power)</div><div class="power-val" style="color:var(--teal)" id="p1-nepa">—</div><div class="power-sub" id="p1-nepa-sub">Loading…</div><div class="prog-track"><div class="prog-fill" id="p1-nepa-bar" style="width:0%;background:var(--teal)"></div></div></div>
+      <div class="power-card" style="background:rgba(6,214,160,.05);border-color:rgba(6,214,160,.15)"><div class="power-label">🔋 Generator</div><div class="power-val" style="color:var(--green)" id="p1-gen">—</div><div class="power-sub" id="p1-gen-sub">Loading…</div><div class="prog-track"><div class="prog-fill" id="p1-gen-bar" style="width:0%;background:var(--green)"></div></div></div>
+      <div class="finding-box info" id="p1-pwr-finding">Analysing power data…</div>
+    </div>
+    <!-- Morning vs Night Donut -->
+    <div class="chart-panel">
+      <div class="section-row"><div class="section-title">Morning vs Night Output</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div id="p1-shift-donut" style="flex-shrink:0"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:6px;font-size:12px"><div class="legend-dot" style="background:var(--teal)"></div>Morning</div><div class="mono" style="font-size:13px;font-weight:600" id="p1-morn-stat">—</div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:6px;font-size:12px"><div class="legend-dot" style="background:var(--green)"></div>Night</div><div class="mono" style="font-size:13px;font-weight:600" id="p1-night-stat">—</div></div>
+        </div>
+      </div>
+      <div class="finding-box info" id="p1-shift-finding">Analysing shift split…</div>
+    </div>
+  </div>
+
+  <div class="section-row"><div class="section-title">Weekly Targets & Supervisor Performance</div></div>
+  <div class="col-2">
+    <div class="chart-panel"><div class="section-row"><div><div class="section-title">Weekly Production vs 24,500-Bag Target</div><div class="section-source" id="p1-wk-src">All weeks</div></div></div><div class="chart-wrap" id="p1-weekly-chart"></div></div>
+    <div class="chart-panel chart-card-pad">
+      <div class="panel-head"><div class="section-title">Supervisor Output Ranking</div><div class="section-source">Bags per supervisor · selected period</div></div>
+      <table class="data-table"><thead><tr><th>Supervisor</th><th>Bags</th><th>Share</th><th>Status</th></tr></thead><tbody id="p1-sup-tbl"></tbody></table>
+      <div class="table-foot" id="p1-sup-foot">Calculating…</div>
+    </div>
+  </div>
+</div><!-- /page-prod1 -->
+
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 4 · PROD DD2 — YIELD & WASTE
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="page-prod2">
+  <div class="info-row">
+    <div class="info-chip live-chip">📅 <span id="p2-period">All Period</span></div>
+    <div class="info-chip">⚙ <span id="p2-mach-chip">6 Machines · M1–M6</span></div>
+    <div class="info-chip">🎞 <span id="p2-rolls-chip">— Film Rolls</span></div>
+    <div class="info-chip">🔄 Source: <span>SACH_MACHINE_CLEAN</span></div>
+  </div>
+  <div class="alert-strip warning" id="p2-insight"><div class="alert-icon">⚠</div><div id="p2-itxt">Loading…</div></div>
+  <div class="section-row"><div class="section-title">Yield & Efficiency Metrics</div></div>
+  <div class="kpi-grid" style="margin-bottom:20px">
+    <div class="kpi-card accent-green"><div class="kpi-label">🌿 Avg Roll Yield</div><div class="kpi-value green" id="p2-yield">—</div><div class="kpi-trend" id="p2-yield-tr">—</div><div class="kpi-src">Yield_Pct</div></div>
+    <div class="kpi-card accent-red"><div class="kpi-label">⚖ Sachets / KG Film</div><div class="kpi-value red" id="p2-sackg">—</div><div class="kpi-trend trend-down">▼ vs 35 target</div><div class="kpi-src">Sachets_Per_Kg</div></div>
+    <div class="kpi-card accent-teal"><div class="kpi-label">🎞 KG Film Used</div><div class="kpi-value sm" id="p2-filmkg">—</div><div class="kpi-trend trend-flat" id="p2-filmkg-tr">—</div><div class="kpi-src">Film_KG_Total</div></div>
+    <div class="kpi-card accent-teal"><div class="kpi-label">🗑 Total Waste Sachets</div><div class="kpi-value" id="p2-waste">—</div><div class="kpi-trend trend-down" id="p2-waste-tr">—</div><div class="kpi-src">Waste_Sachets</div></div>
+    <div class="kpi-card accent-red"><div class="kpi-label">🔴 Low-Efficiency Rolls</div><div class="kpi-value red" id="p2-redrolls">—</div><div class="kpi-trend trend-down" id="p2-red-tr">—</div><div class="kpi-src">Efficiency_Status = Red</div></div>
+    <div class="kpi-card accent-new"><div class="new-tag">LIVE</div><div class="kpi-label">✓ Roll Completion</div><div class="kpi-value green" id="p2-rollcomp">—</div><div class="kpi-trend trend-up" id="p2-rollcomp-tr">—</div><div class="kpi-src">Completion_Status</div></div>
+  </div>
+
+  <div class="section-row"><div class="section-title">Yield Trend & Roll Efficiency</div></div>
+  <div class="col-3" style="margin-bottom:14px">
+    <!-- Yield trend chart -->
+    <div class="chart-panel">
+      <div class="section-row"><div><div class="section-title" id="p2-yield-chart-title">Yield Trend — Weekly</div><div class="section-source" id="p2-yield-chart-src">Weekly averaged yield · green band = 90%+ healthy</div></div></div>
+      <div class="chart-wrap" id="p2-yield-chart"></div>
+    </div>
+    <!-- Roll Efficiency Donut — homogenised with shift donut -->
+    <div class="chart-panel">
+      <div class="section-row"><div><div class="section-title">Roll Efficiency Status</div><div class="section-source">by count · selected period</div></div></div>
+      <div class="donut-wrap" style="gap:12px">
+        <div id="p2-eff-donut" style="flex-shrink:0"></div>
+        <div class="donut-legend">
+          <div style="font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:-2px">Low-efficiency</div>
+          <div style="font-size:20px;font-weight:700;color:var(--red)" class="mono" id="p2-red-pct">—</div>
+          <div class="legend-sub" id="p2-red-sub">Loading…</div>
+          <div class="donut-foot" style="display:flex;flex-direction:column;gap:6px">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Green<span class="legend-val" id="p2-green-rolls">—</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Amber<span class="legend-val" id="p2-amber-rolls">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Roll type + OEE -->
+    <div class="chart-panel">
+      <div class="section-row"><div class="section-title">Roll Type Distribution</div></div>
+      <div id="p2-rolltype-bars" style="display:flex;flex-direction:column;gap:10px;margin-top:6px"></div>
+      <div class="finding-box info" id="p2-rt-finding">Analysing…</div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border-2)">
+        <div class="section-source" style="margin-bottom:6px">Average OEE vs 85% Target</div>
+        <div style="display:flex;align-items:baseline;gap:8px"><div class="mono" style="font-size:20px;font-weight:700" id="p2-oee">—</div><div style="font-size:10px;color:var(--text-3)" id="p2-oee-sub">—</div></div>
+        <div class="prog-track"><div class="prog-fill" id="p2-oee-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-row"><div class="section-title">Waste, Machines & Operators</div></div>
+  <div class="col-2" style="margin-bottom:16px">
+    <div class="chart-panel"><div class="section-row"><div><div class="section-title" id="p2-waste-chart-title">Weekly Waste Trend</div><div class="section-source" id="p2-waste-chart-src">Total waste sachets per week</div></div></div><div class="chart-wrap" id="p2-waste-chart"></div></div>
+    <div class="chart-panel chart-card-pad">
+      <div class="panel-head"><div class="section-title">Machine Operator Performance</div><div class="section-source">Output · Waste · Rolls · Yield · selected period</div></div>
+      <table class="data-table"><thead><tr><th>Operator</th><th>Output</th><th>Waste</th><th>Rolls</th><th>Yield</th></tr></thead><tbody id="p2-op-tbl"></tbody></table>
+      <div class="table-foot" id="p2-op-foot">Calculating…</div>
+    </div>
+  </div>
+  <div class="section-row"><div class="section-title">Machine Yield Grid — M1 to M6</div></div>
+  <div class="chart-panel"><div class="machine-grid" id="p2-mach-grid"></div></div>
+</div><!-- /page-prod2 -->
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+'use strict';
+/* ═══════════════════════════════════════════════════════════════
+   AFRITECH INTELLIGENCE HUB v6.0
+   — Adaptive chart granularity, overflow-safe funnel, homogeneous
+     donuts, key-finding blocks, total slicer reactivity
+   Live data via Apps Script Web App · GitHub Pages
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── APPS SCRIPT WEB APP URL ────────────────────────────────── */
+const API_URL = 'https://script.google.com/macros/s/AKfycbyjqFsXTZei4D1gRsDuDAWOwVF0Jd_B6mf33CQqUCDqCZR5s_GcOY8L42kCWSSz1t3a-A/exec';
+
+/* RAW DATA STORE — populated by loadData() */
+let RAW = { kpiSales:[], kpiProd:[], salesClean:[], shiftClean:[], machineClean:[] };
+
+/* GLOBAL SLICER STATE */
+let S = { period:'all', batch:'all', page:'overview' };
+
+/* COLOUR PALETTE */
+const C = {
+  teal:'#00B4D8', tealDim:'#0096B4', tealFade:'rgba(0,180,216,0.12)',
+  green:'#06D6A0', greenDim:'#05B086', greenFade:'rgba(6,214,160,0.12)',
+  amber:'#FFB703',
+  red:'#EF476F',
+  surface3:'#1E2E3F', text3:'#5A7291', grid:'rgba(255,255,255,0.05)'
+};
+/* hex → rgba helper */
+const ra=(h,a)=>{ const x=h.replace('#',''); return `rgba(${parseInt(x.slice(0,2),16)},${parseInt(x.slice(2,4),16)},${parseInt(x.slice(4,6),16)},${a})`; };
+
+/* FORMATTERS */
+const fmtM  = v=>v==null?'—':'₦'+(Math.abs(v)>=1e6?(v/1e6).toFixed(2)+'M':Math.abs(v)>=1e3?(v/1e3).toFixed(0)+'K':Math.round(v).toLocaleString());
+const fmtF  = v=>'₦'+Math.round(v||0).toLocaleString();
+const fmtBg = v=>Math.abs(v)>=1e3?(v/1e3).toFixed(1)+'K':Math.round(v||0).toString();
+const MNTHS =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function set(id,t){ const e=document.getElementById(id); if(e)e.textContent=t; }
+function htm(id,h){ const e=document.getElementById(id); if(e)e.innerHTML=h; }
+
+/* ── TOOLTIP (refined, pixel-perfect) ──────────────────────── */
+const TT=document.getElementById('tt');
+function showTip(ev,html){
+  TT.innerHTML=html; TT.style.opacity='1';
+  requestAnimationFrame(()=>{
+    const r=TT.getBoundingClientRect();
+    let x=ev.clientX-r.width/2, y=ev.clientY-r.height-16;
+    x=Math.max(8,Math.min(x,window.innerWidth-r.width-8));
+    if(y<8) y=ev.clientY+20;
+    TT.style.left=x+'px'; TT.style.top=y+'px';
+  });
+}
+function hideTip(){ TT.style.opacity='0'; }
+
+/* ── DATE HELPERS ───────────────────────────────────────────── */
+function pd(v){ if(!v)return null; if(v instanceof Date)return isNaN(v)?null:v; const d=new Date(v); return isNaN(d)?null:d; }
+function fmtD(v){ const d=pd(v); if(!d)return'?'; return MNTHS[d.getMonth()]+' '+d.getDate(); }
+function fmtDSh(v){ const d=pd(v); if(!d)return'?'; return MNTHS[d.getMonth()].slice(0,3)+''+d.getDate(); }
+function isoWk(d){ const dt=new Date(d); dt.setHours(0,0,0,0); dt.setDate(dt.getDate()+3-(dt.getDay()+6)%7); const j=new Date(dt.getFullYear(),0,4); return 1+Math.round(((dt-j)/86400000-3+(j.getDay()+6)%7)/7); }
+/* wkKey returns a chronologically sortable ISO key "2026-W14" */
+function wkKey(d){ return d.getFullYear()+'-W'+String(isoWk(d)).padStart(2,'0'); }
+/* wkLabel returns a human-readable display label "Apr W14" */
+function wkLabel(d){ return MNTHS[d.getMonth()].slice(0,3)+' W'+isoWk(d); }
+
+/* ── PERIOD BOUNDS ──────────────────────────────────────────── */
+function pBounds(p){
+  const now=new Date(); const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(p==='today') return{from:today,to:today};
+  if(p==='week'){ const dow=today.getDay(); const mon=new Date(today); mon.setDate(today.getDate()-((dow+6)%7)); return{from:mon,to:today}; }
+  if(p==='month'){ const s=new Date(today.getFullYear(),today.getMonth(),1); return{from:s,to:today}; }
+  return{from:null,to:null};
+}
+function pLabel(){
+  const{from,to}=pBounds(S.period);
+  if(!from) return 'Feb 24, 2026 – Present';
+  const f=d=>MNTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+  if(from.getTime()===to.getTime()) return 'Today · '+f(from);
+  return f(from)+' – '+f(to);
+}
+/* Returns true if current period should use daily granularity */
+function isDailyPeriod(){ return S.period==='week'||S.period==='today'; }
+
+/* ── FILTER ─────────────────────────────────────────────────── */
+function filt(rows, dateCol, batchCol){
+  const{from,to}=pBounds(S.period);
+  return rows.filter(r=>{
+    const d=pd(r[dateCol]); if(!d)return false;
+    if(from && d<from) return false;
+    if(to){ const te=new Date(to); te.setHours(23,59,59,999); if(d>te)return false; }
+    if(S.batch!=='all' && batchCol && r[batchCol] && r[batchCol]!==S.batch) return false;
+    return true;
+  });
+}
+
+/* ── SLICER CONTROLS ────────────────────────────────────────── */
+function setPeriod(p,btn){
+  S.period=p;
+  document.querySelectorAll('#period-tabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  rebuildCurrent();
+}
+function setBatch(v){ S.batch=v; rebuildCurrent(); }
+function populateBatches(){
+  const bs=new Set();
+  ['salesClean','shiftClean','machineClean'].forEach(k=>RAW[k].forEach(r=>{ if(r.Batch_ID)bs.add(r.Batch_ID); }));
+  const sel=document.getElementById('batch-sel');
+  sel.innerHTML='<option value="all">All Batches</option>';
+  [...bs].sort().forEach(b=>{ const o=document.createElement('option'); o.value=b; o.textContent=b; sel.appendChild(o); });
+}
+function rebuildCurrent(){
+  updateSubtitle();
+  const pg=S.page;
+  if(pg==='overview') buildOV();
+  else if(pg==='sales1') buildS1();
+  else if(pg==='sales2') buildS2();
+  else if(pg==='prod1') buildP1();
+  else if(pg==='prod2') buildP2();
+}
+function updateSubtitle(){
+  const b=S.batch==='all'?'All Batches':S.batch;
+  const p=S.period==='all'?'All Period':S.period==='month'?'This Month':S.period==='week'?'This Week':'Today';
+  document.getElementById('tb-sub').textContent='AF_SACH · Sachet Water · '+p+' · '+b;
+}
+
+/* ── PAGE SWITCH ────────────────────────────────────────────── */
+const PM={
+  overview:{pg:'page-overview',nav:'nav-overview',title:'Overview — Afritech Intelligence Hub',fn:()=>buildOV()},
+  sales1:  {pg:'page-sales1', nav:'nav-sales1',  title:'Sachet Water — Revenue & Targets (DD1)',fn:()=>buildS1()},
+  sales2:  {pg:'page-sales2', nav:'nav-sales2',  title:'Sachet Water — Customers & People (DD2)',fn:()=>buildS2()},
+  prod1:   {pg:'page-prod1',  nav:'nav-prod1',   title:'Sachet Water — Shift & Output (DD1)',fn:()=>buildP1()},
+  prod2:   {pg:'page-prod2',  nav:'nav-prod2',   title:'Sachet Water — Yield & Waste (DD2)',fn:()=>buildP2()}
+};
+function switchPage(key){
+  const t=PM[key]; if(!t)return; S.page=key;
+  Object.values(PM).forEach(p=>{ document.getElementById(p.pg).classList.remove('active'); document.getElementById(p.nav).classList.remove('active'); });
+  document.getElementById(t.pg).classList.add('active');
+  document.getElementById(t.nav).classList.add('active');
+  document.getElementById('tb-title').textContent=t.title;
+  updateSubtitle();
+  t.fn();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CHART ENGINE — pure SVG, teal/green palette
+   All chart wrappers use overflow:hidden + width:100%
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── BAR CHART + TARGET LINE ────────────────────────────────── */
+function barChart(id, data, target, opts={}){
+  const el=document.getElementById(id); if(!el||!data.length)return;
+  const W=el.offsetWidth||480, H=opts.H||165;
+  const P={t:14,r:8,b:26,l:opts.l||44};
+  const cW=W-P.l-P.r, cH=H-P.t-P.b;
+  const maxV=Math.max(...data.map(d=>d.v),target||0)*1.12||1;
+  const bW=Math.max(2,cW/data.length*0.62), gap=cW/data.length;
+  const yp=v=>P.t+cH-(v/maxV)*cH;
+  const colFor=v=>v>=(target||Infinity)?C.green:v>=(target||Infinity)*0.5?C.teal:C.tealDim;
+  const vf=opts.vf||String; const af=opts.af||opts.vf||String;
+  const maxLbls=Math.max(1,Math.floor(cW/38));
+  const step=Math.max(1,Math.ceil(data.length/maxLbls));
+  let grid='',bars='',xlbls='';
+  [0,.25,.5,.75,1].forEach(f=>{ const yy=P.t+cH-f*cH; grid+=`<line x1="${P.l}" y1="${yy}" x2="${W-P.r}" y2="${yy}" stroke="${C.grid}"/><text x="${P.l-5}" y="${yy+3}" text-anchor="end" font-size="8" fill="${C.text3}" font-family="JetBrains Mono,monospace">${af(maxV*f)}</text>`; });
+  data.forEach((d,i)=>{
+    const bx=P.l+gap*i+gap/2-bW/2; const bh=Math.max((d.v/maxV)*cH,2); const by=P.t+cH-bh;
+    const col=colFor(d.v); const gid=`bg${id}${i}`;
+    bars+=`<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${ra(col,.92)}"/><stop offset="100%" stop-color="${ra(col,.18)}"/></linearGradient></defs>`;
+    bars+=`<rect x="${bx}" y="${by}" width="${bW}" height="${bh}" rx="2" fill="url(#${gid})" class="bt" data-i="${i}" style="cursor:pointer" opacity=".93"/>`;
+    if(i%step===0||i===data.length-1) xlbls+=`<text x="${Math.min(P.l+gap*i+gap/2,W-P.r-2)}" y="${H-7}" text-anchor="middle" font-size="7.5" fill="${C.text3}">${d.label}</text>`;
+  });
+  let tline='';
+  if(target){ const ty=yp(target); tline=`<line x1="${P.l}" y1="${ty}" x2="${W-P.r}" y2="${ty}" stroke="${C.amber}" stroke-width="1.5" stroke-dasharray="5,3"/><text x="${W-P.r-2}" y="${ty-4}" text-anchor="end" font-size="8" fill="${C.amber}" font-weight="600">${opts.tLabel||'Target'}</text>`; }
+  el.innerHTML=`<svg class="chart" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:hidden">${grid}${bars}${xlbls}${tline}</svg>`;
+  el.querySelectorAll('.bt').forEach(b=>{ b.addEventListener('mousemove',e=>{ const d=data[+b.dataset.i]; showTip(e,`<span class="tooltip-val">${d.label}</span><br>${vf(d.v)}`+(target?`<br><span class="tooltip-sub">${((d.v/target)*100).toFixed(1)}% of target</span>`:'')); b.setAttribute('opacity','1'); }); b.addEventListener('mouseleave',()=>{ hideTip(); b.setAttribute('opacity','.93'); }); });
+}
+
+/* ── ADAPTIVE REVENUE/PRODUCTION CHART ─────────────────────── */
+/* Uses weekly bars when All Period or This Month, daily when This Week/Today */
+function adaptiveBarChart(id, dailyData, weeklyData, target, opts={}){
+  const useDaily=isDailyPeriod();
+  const data=useDaily?dailyData:weeklyData;
+  if(!data||!data.length){ const el=document.getElementById(id); if(el)el.innerHTML=''; return; }
+  barChart(id, data, target, opts);
+}
+
+/* ── LINE CHART ─────────────────────────────────────────────── */
+function lineChart(id, data, opts={}){
+  const el=document.getElementById(id); if(!el||!data.length)return;
+  const W=el.offsetWidth||480, H=opts.H||165;
+  const P={t:14,r:10,b:26,l:opts.l||46};
+  const cW=W-P.l-P.r, cH=H-P.t-P.b;
+  const vals=data.map(d=>d.v).filter(v=>!isNaN(v));
+  let mn=opts.mn!==undefined?opts.mn:Math.min(...vals)*0.92;
+  let mx=opts.mx!==undefined?opts.mx:Math.max(...vals,opts.tgt||0)*1.12;
+  if(mx<=mn){mx=mn+1;}
+  const xp=i=>P.l+i*cW/Math.max(data.length-1,1);
+  const yp=v=>P.t+cH-((v-mn)/(mx-mn))*cH;
+  const col=opts.col||C.teal;
+  const vf=opts.vf||String; const af=opts.af||opts.vf||String;
+  const maxLbls=Math.max(1,Math.floor(cW/36));
+  const step=Math.max(1,Math.ceil(data.length/maxLbls));
+  let grid='',band='';
+  [0,.25,.5,.75,1].forEach(f=>{ const yy=P.t+cH-f*cH; const av=mn+(mx-mn)*f; grid+=`<line x1="${P.l}" y1="${yy}" x2="${W-P.r}" y2="${yy}" stroke="${C.grid}"/><text x="${P.l-5}" y="${yy+3}" text-anchor="end" font-size="8" fill="${C.text3}" font-family="JetBrains Mono,monospace">${af(av)}</text>`; });
+  if(opts.bandMn!==undefined){ const by1=yp(opts.bandMx), by2=yp(opts.bandMn); band=`<rect x="${P.l}" y="${by1}" width="${cW}" height="${Math.max(by2-by1,0)}" fill="${ra(opts.bandCol||C.green,.07)}"/>`; }
+  const gid='lg'+id;
+  let path='M '+xp(0)+' '+yp(data[0].v);
+  data.forEach((d,i)=>{ if(i>0)path+=' L '+xp(i)+' '+yp(d.v); });
+  const area=path+' L '+xp(data.length-1)+' '+(P.t+cH)+' L '+xp(0)+' '+(P.t+cH)+' Z';
+  /* 7-day rolling average */
+  let mavgPath='';
+  if(opts.mavg){ const w=opts.mavg; const avgs=data.map((_,i)=>{ const s=Math.max(0,i-w+1); return data.slice(s,i+1).reduce((a,b)=>a+b.v,0)/(i-s+1); }); mavgPath='M '+xp(0)+' '+yp(avgs[0]); avgs.forEach((v,i)=>{ if(i>0)mavgPath+=' L '+xp(i)+' '+yp(v); }); }
+  let dots='',xlbls='',zbars='';
+  data.forEach((d,i)=>{
+    if(opts.zk&&d[opts.zk]){ zbars+=`<rect x="${xp(i)-3}" y="${P.t+cH-6}" width="6" height="6" fill="${C.tealDim}" opacity=".8" class="lc" data-i="${i}" rx="1" style="cursor:pointer"/>`; }
+    else{ dots+=`<circle cx="${xp(i)}" cy="${yp(d.v)}" r="2.4" fill="${opts.colFn?opts.colFn(d):col}" stroke="${ra(col,.3)}" stroke-width="1.2" class="lc" data-i="${i}" style="cursor:pointer"/>`; }
+    if(i%step===0||i===data.length-1) xlbls+=`<text x="${Math.min(xp(i),W-P.r-2)}" y="${H-7}" text-anchor="middle" font-size="7.5" fill="${C.text3}">${d.label}</text>`;
+  });
+  let tline='';
+  if(opts.tgt!==undefined){ const ty=yp(opts.tgt); tline=`<line x1="${P.l}" y1="${ty}" x2="${W-P.r}" y2="${ty}" stroke="${C.amber}" stroke-width="1.5" stroke-dasharray="4,3"/><text x="${W-P.r-2}" y="${ty-4}" text-anchor="end" font-size="8" fill="${C.amber}" font-weight="600">${opts.tLabel||'Target'}</text>`; }
+  el.innerHTML=`<svg class="chart" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:hidden"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${ra(col,.22)}"/><stop offset="100%" stop-color="${ra(col,.01)}"/></linearGradient></defs>${grid}${band}<path d="${area}" fill="url(#${gid})"/><path d="${path}" fill="none" stroke="${col}" stroke-width="1.8"/>${mavgPath?`<path d="${mavgPath}" fill="none" stroke="${C.tealDim}" stroke-width="1.3" stroke-dasharray="3,3" opacity=".7"/>`:''  }${tline}${zbars}${dots}${xlbls}</svg>`;
+  el.querySelectorAll('.lc').forEach(n=>{ n.addEventListener('mousemove',e=>{ const d=data[+n.dataset.i]; const html=opts.tipFn?opts.tipFn(d):`<span class="tooltip-val">${d.label}</span><br>${vf(d.v)}`; showTip(e,html); if(n.tagName==='circle')n.setAttribute('r','4'); }); n.addEventListener('mouseleave',()=>{ hideTip(); if(n.tagName==='circle')n.setAttribute('r','2.4'); }); });
+}
+
+/* ── SIMPLE BAR ─────────────────────────────────────────────── */
+function simBar(id, data, col, opts={}){
+  const el=document.getElementById(id); if(!el||!data.length)return;
+  const W=el.offsetWidth||480, H=opts.H||145;
+  const P={t:12,r:8,b:26,l:opts.l||38};
+  const cW=W-P.l-P.r, cH=H-P.t-P.b;
+  const maxV=Math.max(...data.map(d=>d.v))*1.18||1;
+  const bW=Math.max(2,cW/data.length*0.6), gap=cW/data.length;
+  const vf=opts.vf||String;
+  const maxLbls=Math.max(1,Math.floor(cW/36));
+  const step=Math.max(1,Math.ceil(data.length/maxLbls));
+  const gid='sb'+id;
+  let grid='',bars='',xlbls='';
+  [0,.5,1].forEach(f=>{ const yy=P.t+cH-f*cH; grid+=`<line x1="${P.l}" y1="${yy}" x2="${W-P.r}" y2="${yy}" stroke="${C.grid}"/><text x="${P.l-4}" y="${yy+3}" text-anchor="end" font-size="7.5" fill="${C.text3}" font-family="JetBrains Mono,monospace">${vf(maxV*f)}</text>`; });
+  data.forEach((d,i)=>{ const bx=P.l+gap*i+gap/2-bW/2; const bh=Math.max((d.v/maxV)*cH,2); const by=P.t+cH-bh; bars+=`<rect x="${bx}" y="${by}" width="${bW}" height="${bh}" rx="2" fill="url(#${gid})" class="sb" data-i="${i}" style="cursor:pointer" opacity=".93"/>`; if(i%step===0||i===data.length-1) xlbls+=`<text x="${Math.min(P.l+gap*i+gap/2,W-P.r-2)}" y="${H-7}" text-anchor="middle" font-size="7.5" fill="${C.text3}">${d.label}</text>`; });
+  el.innerHTML=`<svg class="chart" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:hidden"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${ra(col,.88)}"/><stop offset="100%" stop-color="${ra(col,.14)}"/></linearGradient></defs>${grid}${bars}${xlbls}</svg>`;
+  el.querySelectorAll('.sb').forEach(b=>{ b.addEventListener('mousemove',e=>{ const d=data[+b.dataset.i]; showTip(e,`<span class="tooltip-val">${d.label}</span><br>${vf(d.v)}`); b.setAttribute('opacity','1'); }); b.addEventListener('mouseleave',()=>{ hideTip(); b.setAttribute('opacity','.93'); }); });
+}
+
+/* ── DONUT (unified blueprint) ──────────────────────────────── */
+/* All donuts use identical size/stroke/center-label structure */
+function donut(id, slices, opts={}){
+  const el=document.getElementById(id); if(!el)return;
+  const sz=opts.sz||108, st=opts.st||15;
+  const r=(sz-st)/2, cx=sz/2, cy=sz/2, circ=2*Math.PI*r;
+  const total=slices.reduce((a,s)=>a+s.v,0)||1;
+  let off=0, paths='';
+  slices.forEach((s,i)=>{
+    const d=s.v/total*circ;
+    paths+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${s.col}" stroke-width="${st}" stroke-dasharray="${d} ${circ-d}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})" class="dn" data-i="${i}" style="cursor:pointer" opacity=".94"/>`;
+    off+=d;
+  });
+  const cl=opts.cl!==undefined?opts.cl:Math.round(slices[0].v/total*100)+'%';
+  el.innerHTML=`<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${C.surface3}" stroke-width="${st}" opacity=".4"/>${paths}<text x="${cx}" y="${cy+1}" text-anchor="middle" dominant-baseline="middle" font-size="${opts.clSz||15}" font-weight="700" fill="${opts.clCol||'#EEF2F7'}" font-family="JetBrains Mono,monospace">${cl}</text>${opts.clSub?`<text x="${cx}" y="${cy+15}" text-anchor="middle" font-size="7" fill="${C.text3}">${opts.clSub}</text>`:''}</svg>`;
+  el.querySelectorAll('.dn').forEach(n=>{ n.addEventListener('mousemove',e=>{ const s=slices[+n.dataset.i]; showTip(e,`<span class="tooltip-val">${s.label}</span><br>${s.disp||s.v.toLocaleString()} · <span class="tooltip-sub">${((s.v/total)*100).toFixed(1)}%</span>`); n.setAttribute('opacity','1'); }); n.addEventListener('mouseleave',()=>{ hideTip(); n.setAttribute('opacity','.94'); }); });
+}
+
+/* ── FUNNEL (overflow-safe) ─────────────────────────────────── */
+function funnel(id, stages){
+  const el=document.getElementById(id); if(!el||!stages.length)return;
+  const maxN=stages[0].n||1;
+  const colAt=i=>{ const t=i/(Math.max(stages.length-1,1)); return `rgb(${Math.round(t*6)},${Math.round(180+(214-180)*t)},${Math.round(216+(160-216)*t)})`; };
+  el.innerHTML=stages.map((s,i)=>{
+    const w=Math.max(6,(s.n/maxN)*100);
+    return `<div class="funnel-stage"><div class="funnel-lbl">${s.label}</div><div class="funnel-bar-wrap"><div class="funnel-bar fn" data-i="${i}" style="width:${w}%;background:${colAt(i)}"><span>${i===0?'100%':((s.n/maxN)*100).toFixed(1)+'%'}</span></div></div><div class="funnel-val">${s.disp}</div></div>`;
+  }).join('');
+  el.querySelectorAll('.fn').forEach(n=>{ n.addEventListener('mousemove',e=>{ const s=stages[+n.dataset.i]; showTip(e,`<span class="tooltip-val">${s.label}</span><br>${s.disp}`); }); n.addEventListener('mouseleave',hideTip); });
+}
+
+/* ── HBARS ──────────────────────────────────────────────────── */
+function hbars(id, data){
+  const el=document.getElementById(id); if(!el||!data.length)return;
+  const maxR=data[0].r||1;
+  const cols=[C.green,C.greenDim,C.teal,C.tealDim,C.teal,C.teal,C.teal,C.teal];
+  el.innerHTML=data.map((c,i)=>{ const w=(c.r/maxR)*100; const col=cols[i]||C.teal; return `<div class="hbar-row hbr" data-i="${i}"><div class="hbar-lbl">${c.n}</div><div class="hbar-track"><div class="hbar-fill" style="width:${w}%;background:linear-gradient(90deg,${ra(col,.5)},${col})"><span>${fmtM(c.r)}</span></div></div><div class="hbar-pct" style="color:${col}">${c.pct}%</div></div>`; }).join('');
+  el.querySelectorAll('.hbr').forEach(n=>{ n.addEventListener('mousemove',e=>{ const c=data[+n.dataset.i]; showTip(e,`<span class="tooltip-val">${c.n}</span><br>${fmtF(c.r)} · <span class="tooltip-sub">${c.pct}% of revenue</span>`); }); n.addEventListener('mouseleave',hideTip); });
+}
+
+/* ── MINI FUNNELS ───────────────────────────────────────────── */
+function miniFunnels(id, data){
+  const el=document.getElementById(id); if(!el)return;
+  el.innerHTML=data.map(c=>`<div class="mf-card"><div class="mf-title">${c.emoji} ${c.n}</div><div class="mf-row"><div class="mf-lbl">Bags</div><div class="mf-track"><div class="mf-fill" style="width:100%;background:${C.teal}"></div></div><div class="mf-val">${fmtBg(c.bags)}</div></div><div class="mf-row"><div class="mf-lbl">Revenue</div><div class="mf-track"><div class="mf-fill" style="width:100%;background:${C.green}"></div></div><div class="mf-val">${fmtM(c.rev)}</div></div></div>`).join('');
+}
+
+/* ── MACHINE GRID ───────────────────────────────────────────── */
+function machGrid(id, data){
+  const el=document.getElementById(id); if(!el)return;
+  el.innerHTML=data.map(m=>{ const col=m.yield>=95?C.green:m.yield>=90?C.teal:C.tealDim; return `<div class="machine-card mc" data-id="${m.id}"><div class="machine-id">${m.id} <span class="badge" style="background:${ra(col,.14)};color:${col}">${m.yield.toFixed(1)}%</span></div><div class="machine-metric"><span class="machine-key">Output</span><span class="machine-val" style="color:${col}">${m.output.toLocaleString()}</span></div><div class="machine-metric"><span class="machine-key">Waste</span><span class="machine-val">${m.waste.toLocaleString()}</span></div><div class="machine-metric"><span class="machine-key">Rolls</span><span class="machine-val">${m.rolls}</span></div><div class="machine-bar-track"><div class="machine-bar-fill" style="width:${Math.min(m.yield,100)}%;background:${col}"></div></div></div>`; }).join('');
+  el.querySelectorAll('.mc').forEach(n=>{ const m=data.find(x=>x.id===n.dataset.id); if(!m)return; n.addEventListener('mousemove',e=>{ showTip(e,`<span class="tooltip-val">${m.id}</span><br>Output: ${m.output.toLocaleString()}<br>Yield: ${m.yield.toFixed(1)}%<br><span class="tooltip-sub">Waste: ${m.waste} sachets</span>`); }); n.addEventListener('mouseleave',hideTip); });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AGGREGATION HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+function wklyS(rows){ const wm={}; rows.forEach(r=>{ const d=pd(r.Date); if(!d)return; const wk=wkKey(d); if(!wm[wk])wm[wk]={v:0,bags:0,cash:0,bank:0,label:wkLabel(d)}; wm[wk].v+=r.Total_Revenue||0; wm[wk].bags+=r.Bags_Sold||0; wm[wk].cash+=r.Cash_Revenue||0; wm[wk].bank+=r.Bank_Revenue||0; }); return Object.entries(wm).sort((a,b)=>a[0].localeCompare(b[0])).map(([,v])=>({...v})); }
+function wklyP(rows){ const wm={}; rows.forEach(r=>{ const d=pd(r.Date); if(!d)return; const wk=wkKey(d); if(!wm[wk])wm[wk]={v:0,label:wkLabel(d)}; wm[wk].v+=r.Total_Production||0; }); return Object.entries(wm).sort((a,b)=>a[0].localeCompare(b[0])).map(([,v])=>({...v})); }
+/* Weekly aggregations for machine-level data (yield & waste) */
+function wklyYield(rows){ const wm={}; rows.forEach(r=>{ const d=pd(r.Report_Date); if(!d)return; const wk=wkKey(d); if(!wm[wk])wm[wk]={s:0,n:0,label:wkLabel(d)}; if(r.Yield_Pct>0){wm[wk].s+=r.Yield_Pct;wm[wk].n++;} }); return Object.entries(wm).sort((a,b)=>a[0].localeCompare(b[0])).filter(([,v])=>v.n>0).map(([,v])=>({label:v.label,v:+(v.s/v.n).toFixed(1)})); }
+function wklyWaste(rows){ const wm={}; rows.forEach(r=>{ const d=pd(r.Report_Date); if(!d)return; const wk=wkKey(d); if(!wm[wk])wm[wk]={w:0,label:wkLabel(d)}; wm[wk].w+=r.Waste_Sachets||0; }); return Object.entries(wm).sort((a,b)=>a[0].localeCompare(b[0])).filter(([,v])=>v.w>0).map(([,v])=>({label:v.label,v:Math.round(v.w)})); }
+function dailyS(rows){ return rows.sort((a,b)=>new Date(a.Date)-new Date(b.Date)).map(r=>({label:fmtDSh(r.Date),d:r.Date,v:r.Total_Revenue||0,bags:r.Bags_Sold||0,cash:r.Cash_Revenue||0,bank:r.Bank_Revenue||0,price:r.Avg_Price||0})); }
+function dailyP(rows){ return rows.sort((a,b)=>new Date(a.Date)-new Date(b.Date)).map(r=>({label:fmtDSh(r.Date),d:r.Date,v:r.Total_Production||0,zero:!!r.Zero_Production_Flag})); }
+function byCust(rows){ const cm={}; let tot=0; rows.forEach(r=>{ const c=r.Customer||'Unknown'; if(!cm[c])cm[c]={r:0,bags:0}; cm[c].r+=r.Amount_Received||0; cm[c].bags+=r.Qty_Sold||0; tot+=r.Amount_Received||0; }); return Object.entries(cm).sort((a,b)=>b[1].r-a[1].r).map(([n,v])=>({n,r:Math.round(v.r),bags:Math.round(v.bags),pct:tot>0?+((v.r/tot)*100).toFixed(1):0})); }
+function bySP(rows){ const sm={}; let tot=0; rows.forEach(r=>{ const p=r.Sales_Person||'Unknown'; if(!sm[p])sm[p]={rev:0,bags:0}; sm[p].rev+=r.Amount_Received||0; sm[p].bags+=r.Qty_Sold||0; tot+=r.Amount_Received||0; }); return Object.entries(sm).sort((a,b)=>b[1].rev-a[1].rev).map(([n,v])=>({n,rev:Math.round(v.rev),bags:Math.round(v.bags),pct:tot>0?+((v.rev/tot)*100).toFixed(1):0})); }
+function bySup(rows){ const sm={}; let tot=0; rows.forEach(r=>{ const s=r.Supervisor||'Unknown'; if(!sm[s])sm[s]={bags:0}; sm[s].bags+=r.Total_Production||0; tot+=r.Total_Production||0; }); return Object.entries(sm).sort((a,b)=>b[1].bags-a[1].bags).map(([n,v])=>({n,bags:Math.round(v.bags),pct:tot>0?+((v.bags/tot)*100).toFixed(1):0})); }
+function byMach(rows){ const mm={}; rows.forEach(r=>{ const id=r.Machine_ID; if(!id)return; if(!mm[id])mm[id]={out:0,waste:0,rolls:0,ys:0,yn:0}; mm[id].out+=r.Output_Sachets||0; mm[id].waste+=r.Waste_Sachets||0; mm[id].rolls++; if(r.Yield_Pct>0){mm[id].ys+=r.Yield_Pct;mm[id].yn++;} }); return Object.entries(mm).sort((a,b)=>a[0].localeCompare(b[0])).map(([id,v])=>({id,output:Math.round(v.out),waste:Math.round(v.waste),rolls:v.rolls,yield:v.yn>0?+(v.ys/v.yn).toFixed(1):0})); }
+function byOp(rows){ const om={}; rows.forEach(r=>{ const op=r.Operator||'Unknown'; if(!om[op])om[op]={out:0,waste:0,rolls:0,ys:0,yn:0}; om[op].out+=r.Output_Sachets||0; om[op].waste+=r.Waste_Sachets||0; om[op].rolls++; if(r.Yield_Pct>0){om[op].ys+=r.Yield_Pct;om[op].yn++;} }); return Object.entries(om).sort((a,b)=>b[1].out-a[1].out).map(([n,v])=>({n,output:Math.round(v.out),waste:Math.round(v.waste),rolls:v.rolls,yield:v.yn>0?+(v.ys/v.yn).toFixed(1):0})); }
+function custEmoji(n){ n=(n||'').toLowerCase(); if(n.includes('outside'))return'🚌'; if(n.includes('614'))return'🚐'; if(n.includes('factory'))return'🏭'; if(n.includes('706'))return'🚑'; if(n.includes('benz')||n.includes('814'))return'🚛'; if(n.includes('kutigi'))return'🛻'; if(n.includes('bdgg'))return'📦'; if(n.includes('yama'))return'🏪'; return'📍'; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE BUILDERS
+   Every builder fully reacts to S.period + S.batch
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── OVERVIEW — purely narrative, no live data widgets ──────── */
+function buildOV(){
+  /* Overview is static narrative — no data rebuild needed.
+     Slicer state does not affect this page. */
+}
+
+/* ── SALES DD1 ──────────────────────────────────────────────── */
+function buildS1(){
+  const ks=filt(RAW.kpiSales,'Date','Batch_ID');
+  const sc=filt(RAW.salesClean,'Reporting_Date','Batch_ID');
+  const totRev=ks.reduce((s,r)=>s+(r.Total_Revenue||0),0);
+  const totBags=sc.reduce((s,r)=>s+(r.Qty_Sold||0),0);
+  const totCash=ks.reduce((s,r)=>s+(r.Cash_Revenue||0),0);
+  const totBank=ks.reduce((s,r)=>s+(r.Bank_Revenue||0),0);
+  const nDays=ks.length||1;
+  const avgD=totRev/nDays;
+  const priceR=ks.filter(r=>r.Avg_Price>0);
+  const avgPr=priceR.length?priceR.reduce((s,r)=>s+r.Avg_Price,0)/priceR.length:0;
+  const collOK=ks.filter(r=>r.Collection_Rate_Pct>=99).length;
+  const collRate=ks.length>0?(collOK/ks.length*100):0;
+  const wks=wklyS(ks); const nWks=wks.length||1;
+  const bestW=wks.reduce((m,w)=>w.v>m.v?w:m,{v:0,label:'—'});
+  const bestBw=wks.reduce((m,w)=>w.bags>m.bags?w:m,{bags:0,label:'—'});
+  const wHit=wks.filter(w=>w.v>=5000000).length;
+  const bTgtCum=24500*nWks; const btPct=bTgtCum>0?(totBags/bTgtCum*100):0;
+  const revPct=(bestW.v/5000000*100); const bagPct=(bestBw.bags/24500*100);
+  const b=S.batch!=='all'?' · '+S.batch:'';
+
+  set('s1-period',pLabel()); set('s1-days',nDays+' days');
+  set('s1-rev',fmtM(totRev)); set('s1-rev-tr','— '+nDays+'-day period total');
+  set('s1-avgrev',fmtM(avgD));
+  document.getElementById('s1-avgrev-tr').textContent=(avgD>=714000?'▲ Above':'▼ vs')+' ₦714K daily target';
+  document.getElementById('s1-avgrev-tr').className='kpi-trend '+(avgD>=714000?'trend-up':'trend-down');
+  set('s1-bags',fmtBg(totBags)); set('s1-bags-tr','— '+Math.round(totBags/nDays).toLocaleString()+' avg / day');
+  set('s1-price',avgPr>0?'₦'+Math.round(avgPr):'—');
+  set('s1-coll',collRate.toFixed(0)+'%');
+  set('s1-coll-tr',collRate>=95?'▲ Healthy collection rate':'▼ Collection gap detected');
+  set('s1-btgt',btPct.toFixed(1)+'%');
+  set('s1-btgt-tr','▼ '+Math.round(totBags).toLocaleString()+' of '+Math.round(bTgtCum).toLocaleString()+' cumulative target');
+  set('s1-rev-pct',revPct.toFixed(1)+'%');
+  const rb=document.getElementById('s1-rev-bar'); if(rb)rb.style.width=Math.min(revPct,100)+'%';
+  set('s1-rev-best','Best: '+fmtM(bestW.v)+' ('+bestW.label+')');
+  set('s1-bags-pct',bagPct.toFixed(1)+'%');
+  const bb=document.getElementById('s1-bags-bar'); if(bb)bb.style.width=Math.min(bagPct,100)+'%';
+  set('s1-bags-best','Best: '+fmtBg(bestBw.bags)+' ('+bestBw.label+')');
+  htm('s1-finding',`<strong>${wHit} of ${nWks} weeks</strong> hit the ₦5M target. Best week: ${bestW.label} at ${fmtM(bestW.v)}.`);
+  document.getElementById('s1-finding').className='finding-box '+(wHit>0?'ok':'info');
+
+  /* Adaptive chart: weekly bars (All Period / Month) or daily bars (Week / Today) */
+  const daily=dailyS(ks);
+  const chartTitle=isDailyPeriod()?'Daily Revenue':'Revenue — Weekly Summary';
+  const chartSrc=isDailyPeriod()?'Daily breakdown · all days in period':'Weekly aggregation · click bars for detail';
+  set('s1-daily-title',chartTitle); set('s1-daily-src',chartSrc);
+  if(isDailyPeriod()){
+    barChart('s1-daily-chart',daily,714000,{vf:fmtM,af:fmtM,tLabel:'₦714K',H:160});
+  } else {
+    barChart('s1-daily-chart',wks,5000000,{vf:fmtM,af:fmtM,tLabel:'₦5M',H:160});
+  }
+  barChart('s1-weekly-chart',wks,5000000,{vf:fmtM,af:fmtM,tLabel:'₦5M'});
+  set('s1-wk-src',nWks+' weeks · '+wHit+' hit ₦5M target');
+
+  /* Donut — cash vs bank */
+  const cashPct=totCash+totBank>0?Math.round(totCash/(totCash+totBank)*100):0;
+  donut('s1-donut',[
+    {label:'Cash',v:totCash,col:C.teal,disp:fmtM(totCash)},
+    {label:'Bank Transfer',v:totBank,col:C.green,disp:fmtM(totBank)}
+  ],{cl:cashPct+'%',clCol:C.teal,clSub:'Cash share'});
+  set('s1-cash-sub',fmtM(totCash)); set('s1-cash-pct',cashPct+'%');
+  set('s1-bank-sub',fmtM(totBank)); set('s1-bank-pct',(100-cashPct)+'%');
+  set('s1-coll-disp',collRate.toFixed(0)+'%');
+
+  /* Funnel */
+  const ytdExp=sc.reduce((s,r)=>s+(r.Expected_Revenue||0),0);
+  const ytdColl=sc.reduce((s,r)=>s+(r.Amount_Received||0),0);
+  const ytdOut=sc.reduce((s,r)=>s+(r.Outstanding_Amount||0),0);
+  const nm=Math.max(totBags,1);
+  funnel('s1-funnel',[
+    {label:'Bags Sold',disp:Math.round(totBags).toLocaleString()+' bags',n:totBags},
+    {label:'Rev Expected',disp:fmtM(ytdExp),n:ytdExp/nm*nm},
+    {label:'Rev Collected',disp:fmtM(ytdColl),n:ytdColl/nm*nm},
+    {label:'Cash',disp:fmtM(totCash),n:totCash/nm*nm},
+    {label:'Bank',disp:fmtM(totBank),n:totBank/nm*nm},
+    {label:'Outstanding',disp:ytdOut>0?fmtM(ytdOut):'₦0 — Clean',n:Math.max(ytdOut,nm*0.001)}
+  ]);
+
+  /* CEO Insight */
+  htm('s1-insight',`<div class="alert-icon">⚠</div><div><strong>CEO Insight — ${pLabel()}${b}:</strong> Revenue <strong>${fmtM(totRev)}</strong> across ${nDays} days (${nWks} weeks). Avg daily: <strong>${fmtM(avgD)}</strong> vs ₦714K target. <strong>${wHit} of ${nWks}</strong> weeks reached ₦5M — best week ${bestW.label} at ${fmtM(bestW.v)}. Collection rate: ${collRate.toFixed(0)}%. Bags vs cumulative target: ${btPct.toFixed(1)}%.</div>`);
+  document.getElementById('s1-insight').className='alert-strip '+(wHit>0?'ok':'warning');
+}
+
+/* ── SALES DD2 ──────────────────────────────────────────────── */
+function buildS2(){
+  const sc=filt(RAW.salesClean,'Reporting_Date','Batch_ID');
+  const ks=filt(RAW.kpiSales,'Date','Batch_ID');
+  const custs=byCust(sc); const sps=bySP(sc);
+  const uniq=new Set(sc.map(r=>r.Customer).filter(Boolean)).size;
+  const topC=custs[0]||{n:'—',r:0,pct:0}; const topSP=sps[0]||{n:'—',rev:0,pct:0};
+  const totOut=sc.reduce((s,r)=>s+(r.Outstanding_Amount||0),0);
+  const b=S.batch!=='all'?' · '+S.batch:'';
+
+  set('s2-period',pLabel()); set('s2-custs',uniq+' Active Customer'+(uniq!==1?'s':''));
+  set('s2-topcust',topC.n); set('s2-topcust-tr','— '+fmtM(topC.r)+' · '+topC.pct+'% share');
+  set('s2-topsp',topSP.n); set('s2-topsp-tr','▲ '+fmtM(topSP.rev)+' · '+topSP.pct+'%');
+  set('s2-debt',totOut>0?fmtM(totOut):'₦0'); set('s2-debt-tr',totOut>0?'▼ Outstanding debt exists':'▲ All payments clean');
+  set('s2-custcnt',uniq);
+
+  hbars('s2-cust-chart',custs.slice(0,9));
+
+  const spCols=[C.green,C.teal,C.tealDim]; const spMax=sps[0]?.rev||1;
+  htm('s2-sp-tbl',sps.slice(0,5).map((sp,i)=>`<tr><td><strong>${sp.n}</strong></td><td class="num">${fmtF(sp.rev)}</td><td class="num">${Math.round(sp.bags).toLocaleString()}</td><td><div class="sp-wrap"><div class="sp-track"><div class="sp-fill" style="width:${(sp.rev/spMax*100).toFixed(1)}%;background:${spCols[i%3]}"></div></div><span class="mono" style="font-size:10px">${sp.pct}%</span></div></td><td><span class="badge ${i===0?'badge-green':'badge-teal'}">${i===0?'● Lead':'● Active'}</span></td></tr>`).join(''));
+  const spread=sps.length>1&&(sps[0].pct-sps[sps.length-1].pct)<=22;
+  set('s2-sp-foot',spread?'Sales persons within 22% of each other — no single-person dependency risk.':'Revenue concentration detected in top sales person — monitor distribution.');
+
+  const priceData=dailyS(ks).filter(d=>d.price>0).map(d=>({label:d.label,v:d.price}));
+  lineChart('s2-price-chart',priceData,{bandMn:170,bandMx:280,bandCol:C.green,col:C.teal,mn:150,mx:300,vf:v=>'₦'+Math.round(v),af:v=>'₦'+Math.round(v),tipFn:d=>`<span class="tooltip-val">${d.label}</span><br>Avg price: ₦${Math.round(d.v)}/bag`});
+
+  miniFunnels('s2-funnels',custs.slice(0,6).map(c=>({n:c.n,emoji:custEmoji(c.n),bags:c.bags,rev:c.r})));
+
+  const conc=topC.pct>=35;
+  htm('s2-insight',`<div class="alert-icon">💡</div><div><strong>CEO Insight — ${pLabel()}${b}:</strong> <strong>${topC.n}</strong> accounts for <strong>${topC.pct}%</strong> (${fmtM(topC.r)})${conc?' — single-customer concentration risk':' — healthy diversification'}. Top sales person: <strong>${topSP.n}</strong> (${topSP.pct}%, ${fmtM(topSP.rev)}). Outstanding debt: ${totOut>0?fmtM(totOut):'₦0 — clean books'}. ${uniq} active customers.</div>`);
+  document.getElementById('s2-insight').className='alert-strip '+(conc?'warning':'info');
+}
+
+/* ── PROD DD1 ───────────────────────────────────────────────── */
+function buildP1(){
+  const kp=filt(RAW.kpiProd,'Date','Batch_ID');
+  const sh=filt(RAW.shiftClean,'Report_Date','Batch_ID');
+  const totP=kp.reduce((s,r)=>s+(r.Total_Production||0),0);
+  const mornP=kp.reduce((s,r)=>s+(r.Morning_Production||0),0);
+  const nightP=kp.reduce((s,r)=>s+(r.Night_Production||0),0);
+  const zeros=kp.filter(r=>r.Zero_Production_Flag).length;
+  const nDays=kp.length||1; const avgD=totP/nDays;
+  const bestR=kp.reduce((m,r)=>(r.Total_Production||0)>(m.Total_Production||0)?r:m,kp[0]||{});
+  const wks=wklyP(kp); const nWks=wks.length||1; const wHit=wks.filter(w=>w.v>=24500).length;
+  const pTgtCum=24500*nWks; const ptPct=pTgtCum>0?(totP/pTgtCum*100):0;
+  const mPct=totP>0?Math.round(mornP/totP*100):0;
+  const nepaSh=sh.filter(r=>r.NEPA_Available==='Yes').length;
+  const genSh=sh.filter(r=>r.Generator_Used==='Yes').length;
+  const totSh=sh.length||1;
+  const nepaPct=Math.round(nepaSh/totSh*100); const genPct=Math.round(genSh/totSh*100);
+  const nepaHrs=sh.reduce((s,r)=>s+(r.NEPA_Hours||0),0);
+  const genHrs=sh.reduce((s,r)=>s+(r.Gen_Hours||0),0);
+  const dtr=(zeros/nDays*100).toFixed(1);
+  const b=S.batch!=='all'?' · '+S.batch:'';
+
+  set('p1-period',pLabel()); set('p1-days',nDays+' production days');
+  set('p1-bags',Math.round(totP).toLocaleString()); set('p1-bags-tr','— '+nDays+' days recorded');
+  set('p1-avgout',Math.round(avgD).toLocaleString());
+  document.getElementById('p1-avgout-tr').textContent=(avgD>=3500?'▲ Above':'▼ vs')+' ~3,500 needed';
+  document.getElementById('p1-avgout-tr').className='kpi-trend '+(avgD>=3500?'trend-up':'trend-down');
+  set('p1-best',Math.round(bestR?.Total_Production||0).toLocaleString()); set('p1-best-tr','— '+fmtD(bestR?.Date));
+  set('p1-zero',zeros); set('p1-zero-tr','▼ '+dtr+'% downtime rate');
+  set('p1-shift',fmtBg(mornP)+' / '+fmtBg(nightP)); set('p1-shift-tr','— '+mPct+'% morning share');
+  set('p1-ptgt',ptPct.toFixed(1)+'%'); set('p1-ptgt-tr','▼ '+Math.round(totP).toLocaleString()+' of '+Math.round(pTgtCum).toLocaleString()+' cumulative target');
+
+  /* Adaptive production chart */
+  const dpData=dailyP(kp);
+  const chartTitle=isDailyPeriod()?'Daily Production':'Production — Weekly Summary';
+  const chartSrc=isDailyPeriod()?'Daily bars · teal marker = zero day':'Weekly aggregation · dashed = 24,500 bag target';
+  set('p1-daily-title',chartTitle); set('p1-daily-src',chartSrc);
+  if(isDailyPeriod()){
+    lineChart('p1-daily-chart',dpData,{tgt:3500,tLabel:'3,500 bags',zk:'zero',col:C.green,mn:0,vf:v=>Math.round(v).toLocaleString(),af:fmtBg,tipFn:d=>d.zero?`<span class="tooltip-val">${d.label}</span><br><span style="color:${C.tealDim}">Zero production day</span>`:`<span class="tooltip-val">${d.label}</span><br>${d.v.toLocaleString()} bags`});
+  } else {
+    barChart('p1-daily-chart',wks,24500,{vf:v=>Math.round(v).toLocaleString(),af:fmtBg,tLabel:'24,500',H:160});
+  }
+  /* Key finding for daily production chart */
+  const zeroPct=(zeros/nDays*100).toFixed(1);
+  const prodFindingClass=zeros/nDays>0.25?'warn':wHit/nWks>0.5?'ok':'info';
+  htm('p1-daily-finding',`<strong>Key finding:</strong> ${zeros} zero-production day${zeros!==1?'s':''} (${zeroPct}% downtime). <strong>${wHit} of ${nWks}</strong> weeks hit the 24,500-bag target. Avg daily output: <strong>${Math.round(avgD).toLocaleString()}</strong> bags.`);
+  document.getElementById('p1-daily-finding').className='finding-box '+prodFindingClass;
+
+  barChart('p1-weekly-chart',wks,24500,{vf:v=>Math.round(v).toLocaleString(),af:fmtBg,tLabel:'24,500'});
+  set('p1-wk-src',nWks+' weeks recorded · '+wHit+' hit target');
+
+  set('p1-nepa',nepaSh+' shifts'); set('p1-nepa-sub',nepaHrs.toFixed(1)+' total hours · '+nepaPct+'% of shifts with NEPA');
+  const nb=document.getElementById('p1-nepa-bar'); if(nb)nb.style.width=nepaPct+'%';
+  set('p1-gen',genSh+' shifts'); set('p1-gen-sub',genHrs.toFixed(1)+' total hours · '+genPct+'% of shifts used generator');
+  const gb=document.getElementById('p1-gen-bar'); if(gb)gb.style.width=genPct+'%';
+  htm('p1-pwr-finding',`<strong>Key finding:</strong> Generator on ${genPct}% of shifts. ${nepaPct>=50?'NEPA available on majority of shifts — fuel cost partially managed.':'NEPA unreliable — generator dependency inflates fuel cost directly.'}`);
+  document.getElementById('p1-pwr-finding').className='finding-box '+(genPct>70?'warn':'info');
+
+  /* Morning vs Night Donut — uses same blueprint as all donuts */
+  donut('p1-shift-donut',[
+    {label:'Morning',v:mornP,col:C.teal,disp:Math.round(mornP).toLocaleString()+' bags'},
+    {label:'Night',v:nightP,col:C.green,disp:Math.round(nightP).toLocaleString()+' bags'}
+  ],{cl:mPct+'%',clCol:C.teal,clSub:'Morning'});
+  set('p1-morn-stat',Math.round(mornP).toLocaleString()+' ('+mPct+'%)');
+  set('p1-night-stat',Math.round(nightP).toLocaleString()+' ('+(100-mPct)+'%)');
+  /* Key finding for shift donut */
+  const shiftFindingClass=mPct>70?'warn':mPct<35?'warn':'ok';
+  htm('p1-shift-finding',`<strong>Key finding:</strong> Morning shift produces <strong>${mPct}%</strong> of total output. ${mPct>65?'Strong morning dominance — night shift underutilised.':mPct<40?'Night shift outperforming — review morning scheduling.':'Healthy shift balance across the period.'}`);
+  document.getElementById('p1-shift-finding').className='finding-box '+shiftFindingClass;
+
+  const sups=bySup(sh); const sCols=[C.green,C.teal,C.tealDim,'#5A7291']; const sMax=sups[0]?.bags||1;
+  htm('p1-sup-tbl',sups.slice(0,5).map((s,i)=>`<tr><td><strong>${s.n}</strong></td><td class="num">${s.bags.toLocaleString()}</td><td><div class="sp-wrap"><div class="sp-track"><div class="sp-fill" style="width:${(s.bags/sMax*100).toFixed(1)}%;background:${sCols[i%4]}"></div></div><span class="mono" style="font-size:10px">${s.pct}%</span></div></td><td><span class="badge ${i===0?'badge-green':'badge-teal'}">${i===0?'● Lead':'● Active'}</span></td></tr>`).join(''));
+  const ls=sups[0]||{n:'—',pct:0};
+  set('p1-sup-foot',ls.n+' supervises '+ls.pct+'% of all production in this period.');
+
+  htm('p1-insight',`<div class="alert-icon">⚠</div><div><strong>CEO Insight — ${pLabel()}${b}:</strong> <strong>${Math.round(totP).toLocaleString()}</strong> bags produced across ${nDays} days (${nWks} weeks). <strong>${wHit} of ${nWks}</strong> weeks hit 24,500-bag target. ${zeros} zero-production days (${dtr}% downtime). Morning produces <strong>${mPct}%</strong> of output. <strong>${ls.n}</strong> leads supervisors at ${ls.pct}%. Generator active on ${genPct}% of shifts.</div>`);
+  document.getElementById('p1-insight').className='alert-strip '+(zeros/nDays>0.3?'warning':'ok');
+}
+
+/* ── PROD DD2 ───────────────────────────────────────────────── */
+function buildP2(){
+  const mc=filt(RAW.machineClean,'Report_Date','Batch_ID');
+  const kp=filt(RAW.kpiProd,'Date','Batch_ID');
+  const totOut=mc.reduce((s,r)=>s+(r.Output_Sachets||0),0);
+  const totWaste=mc.reduce((s,r)=>s+(r.Waste_Sachets||0),0);
+  const totFilm=mc.reduce((s,r)=>s+(r.KG_Film_Used||0),0);
+  const totRolls=mc.length;
+  const complR=mc.filter(r=>r.Completion_Status==='Complete').length;
+  const vy=mc.filter(r=>r.Yield_Pct>0);
+  const avgY=vy.length?vy.reduce((s,r)=>s+r.Yield_Pct,0)/vy.length:0;
+  const vs=mc.filter(r=>r.Efficiency_Sachets_Per_KG>0);
+  const avgSK=vs.length?vs.reduce((s,r)=>s+r.Efficiency_Sachets_Per_KG,0)/vs.length:0;
+  const redR=mc.filter(r=>r.Efficiency_Status==='Red').length;
+  const greenR=mc.filter(r=>r.Efficiency_Status==='Green').length;
+  const amberR=mc.filter(r=>r.Efficiency_Status==='Amber'||r.Efficiency_Status==='Yellow').length;
+  const rcPct=totRolls>0?(complR/totRolls*100):0;
+  const redPct=totRolls>0?(redR/totRolls*100):0;
+  const voee=kp.filter(r=>r.OEE_Pct>0);
+  const avgOEE=voee.length?voee.reduce((s,r)=>s+r.OEE_Pct,0)/voee.length:0;
+  const bestOEE=voee.length?Math.max(...voee.map(r=>r.OEE_Pct)):0;
+  const b=S.batch!=='all'?' · '+S.batch:'';
+
+  set('p2-period',pLabel()); set('p2-rolls-chip',totRolls+' Film Rolls');
+  const yieldEl=document.getElementById('p2-yield');
+  if(yieldEl){ yieldEl.textContent=avgY.toFixed(1)+'%'; yieldEl.className='kpi-value '+(avgY>=90?'green':'red'); }
+  set('p2-yield-tr',avgY>=90?'▲ Above 90% green threshold':'▼ Below 90% threshold');
+  set('p2-sackg',avgSK.toFixed(1));
+  set('p2-filmkg',totFilm>=1000?(totFilm/1000).toFixed(1)+'K kg':Math.round(totFilm).toLocaleString()+' kg');
+  set('p2-filmkg-tr','— '+totRolls+' rolls consumed');
+  set('p2-waste',Math.round(totWaste).toLocaleString());
+  set('p2-waste-tr','▼ '+((totOut+totWaste)>0?((totWaste/(totOut+totWaste))*100).toFixed(1):0)+'% of output');
+  set('p2-redrolls',redPct.toFixed(1)+'%'); set('p2-red-tr','▼ '+redR+' of '+totRolls+' rolls below efficiency floor');
+  set('p2-rollcomp',rcPct.toFixed(1)+'%'); set('p2-rollcomp-tr','▲ '+complR+' of '+totRolls+' rolls complete');
+
+  /* ── Smart granularity for yield trend ───────────────────────────
+     All Period / This Month → weekly averaged points (noise-free)
+     This Week / Today      → daily points with 7-day rolling avg
+  ─────────────────────────────────────────────────────────────────── */
+  const p2daily=isDailyPeriod();
+
+  /* Yield trend — weekly or daily */
+  let yd;
+  if(p2daily){
+    const ydm={}; mc.forEach(r=>{ const d=pd(r.Report_Date); if(!d)return; const k=d.toISOString().split('T')[0]; if(!ydm[k])ydm[k]={s:0,n:0,d}; if(r.Yield_Pct>0){ydm[k].s+=r.Yield_Pct;ydm[k].n++;} });
+    yd=Object.values(ydm).filter(v=>v.n>0).sort((a,b)=>a.d-b.d).map(v=>({label:fmtDSh(v.d),v:+(v.s/v.n).toFixed(1)}));
+  } else {
+    yd=wklyYield(mc);
+  }
+  const yieldChartTitle=p2daily?'Yield Trend — Daily':'Yield Trend — Weekly';
+  const yieldChartSrc=p2daily?'Daily avg yield per roll · 7-day rolling avg':'Weekly averaged yield · green band = 90%+ healthy';
+  set('p2-yield-chart-title',yieldChartTitle);
+  set('p2-yield-chart-src',yieldChartSrc);
+  lineChart('p2-yield-chart',yd,{bandMn:90,bandMx:100,bandCol:C.green,col:C.teal,mn:80,mx:100,mavg:p2daily?7:0,vf:v=>v.toFixed(1)+'%',af:v=>v.toFixed(0)+'%',tipFn:d=>`<span class="tooltip-val">${d.label}</span><br>Avg yield: ${d.v}%`});
+
+  /* Roll Efficiency Donut — same blueprint */
+  donut('p2-eff-donut',[
+    {label:'Low-efficiency (Red)',v:redR,col:C.red,disp:redR+' rolls'},
+    {label:'Green',v:greenR,col:C.green,disp:greenR+' rolls'},
+    {label:'Amber',v:amberR,col:C.teal,disp:amberR+' rolls'}
+  ],{cl:redPct.toFixed(1)+'%',clCol:C.red,clSub:'Low eff.',sz:108,st:15});
+  set('p2-red-pct',redPct.toFixed(1)+'%'); set('p2-red-sub',redR+' of '+totRolls+' rolls below efficiency floor');
+  set('p2-green-rolls',greenR+' · '+(totRolls>0?((greenR/totRolls)*100).toFixed(1):0)+'%');
+  set('p2-amber-rolls',amberR+' · '+(totRolls>0?((amberR/totRolls)*100).toFixed(1):0)+'%');
+
+  const rtt={}; mc.forEach(r=>{ const t=r.Roll_Type||'Unknown'; if(!rtt[t])rtt[t]=0; rtt[t]++; });
+  const rtE=Object.entries(rtt).sort((a,b)=>b[1]-a[1]); const rtMax=rtE[0]?.[1]||1;
+  const rtCols=[C.teal,C.green,C.tealDim];
+  htm('p2-rolltype-bars',rtE.map(([t,c],i)=>`<div class="hbar-row" style="cursor:default"><div class="hbar-lbl">${t}</div><div class="hbar-track"><div class="hbar-fill" style="width:${(c/rtMax*100).toFixed(1)}%;background:linear-gradient(90deg,${ra(rtCols[i%3],.5)},${rtCols[i%3]})"><span>${c} rolls</span></div></div><div class="hbar-pct" style="color:${rtCols[i%3]}">${(c/totRolls*100).toFixed(1)}%</div></div>`).join(''));
+  htm('p2-rt-finding',`<strong>Roll mix:</strong> ${rtE.map(([t,c])=>t+': '+c).join(' · ')}. ${redPct>70?'High proportion of low-efficiency rolls — film utilisation should be reviewed.':'Roll efficiency pattern normal for this period.'}`);
+  document.getElementById('p2-rt-finding').className='finding-box '+(redPct>70?'warn':'info');
+
+  const oeeCol=avgOEE>=85?C.green:avgOEE>=50?C.teal:C.red;
+  document.getElementById('p2-oee').textContent=avgOEE.toFixed(1)+'%';
+  document.getElementById('p2-oee').style.color=oeeCol;
+  set('p2-oee-sub','vs 85% target · Best: '+bestOEE.toFixed(1)+'%');
+  const ob=document.getElementById('p2-oee-bar'); if(ob){ob.style.width=Math.min(avgOEE,100)+'%';ob.style.background=oeeCol;}
+
+  /* Waste trend — smart aggregation (weekly/daily) */
+  let wd;
+  if(p2daily){
+    const wdm={}; mc.forEach(r=>{ const d=pd(r.Report_Date); if(!d)return; const k=d.toISOString().split('T')[0]; if(!wdm[k])wdm[k]={w:0,d}; wdm[k].w+=r.Waste_Sachets||0; });
+    wd=Object.values(wdm).filter(v=>v.w>0).sort((a,b)=>a.d-b.d).map(v=>({label:fmtDSh(v.d),v:Math.round(v.w)}));
+  } else {
+    wd=wklyWaste(mc);
+  }
+  const wasteChartTitle=p2daily?'Daily Waste Trend':'Weekly Waste Trend';
+  const wasteChartSrc=p2daily?'Sachets wasted per day · selected period':'Total waste sachets per week';
+  set('p2-waste-chart-title',wasteChartTitle);
+  set('p2-waste-chart-src',wasteChartSrc);
+  simBar('p2-waste-chart',wd,C.teal,{vf:v=>Math.round(v)+' sachets',af:v=>Math.round(v)});
+
+  const ops=byOp(mc);
+  htm('p2-op-tbl',ops.map(op=>`<tr><td><strong>${op.n}</strong></td><td class="num">${op.output.toLocaleString()}</td><td class="num">${op.waste.toLocaleString()}</td><td class="num">${op.rolls}</td><td class="num" style="color:${op.yield>=95?C.green:op.yield>=90?C.teal:C.tealDim}">${op.yield.toFixed(1)}%</td></tr>`).join(''));
+  const top0=ops[0]||{n:'—',yield:0};
+  set('p2-op-foot',top0.n+' leads operator output. Avg yield '+avgY.toFixed(1)+'% — '+(avgY>=90?'healthy roll-to-sachet conversion.':'below efficiency threshold, review film calibration.'));
+  machGrid('p2-mach-grid',byMach(mc));
+
+  htm('p2-insight',`<div class="alert-icon">⚠</div><div><strong>CEO Insight — ${pLabel()}${b}:</strong> Yield <strong>${avgY.toFixed(1)}%</strong> (${avgY>=90?'healthy':'below threshold'}). Sachets/KG film: <strong>${avgSK.toFixed(1)}</strong> vs 35 target — ${avgSK<20?'critically low film utilisation inflating raw-material cost per bag':'below target, review film calibration'}. Low-efficiency rolls: <strong>${redPct.toFixed(1)}%</strong> (${redR} of ${totRolls}). Roll completion: ${rcPct.toFixed(1)}%. Avg OEE: ${avgOEE.toFixed(1)}%.</div>`);
+  document.getElementById('p2-insight').className='alert-strip '+(avgY>=90?'ok':'warning');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DATA LOADING
+   Apps Script doGet() must return JSON with keys:
+     kpiSales[]    — SACH_KPI_SALES (one row per date)
+     kpiProd[]     — SACH_KPI_PRODUCTION (one row per date)
+     salesClean[]  — SACH_SALES_CLEAN
+     shiftClean[]  — SACH_SHIFT_CLEAN
+     machineClean[]— SACH_MACHINE_CLEAN
+   All date fields must be ISO strings (YYYY-MM-DD).
+   Batch filtering uses Batch_ID field on CLEAN tabs only.
+   ═══════════════════════════════════════════════════════════════ */
+async function loadData(){
+  const badge=document.getElementById('live-badge');
+  document.getElementById('live-txt').textContent='LOADING…';
+  badge.classList.remove('demo');
+  if(!API_URL){
+    document.getElementById('live-txt').textContent='DEMO DATA';
+    badge.classList.add('demo');
+    RAW=genDemo(); finalise(); return;
+  }
+  try{
+    const res=await fetch(API_URL);
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const j=await res.json();
+    if(j.kpiSales)    RAW.kpiSales   =j.kpiSales;
+    if(j.kpiProd)     RAW.kpiProd    =j.kpiProd;
+    if(j.salesClean)  RAW.salesClean =j.salesClean;
+    if(j.shiftClean)  RAW.shiftClean =j.shiftClean;
+    if(j.machineClean)RAW.machineClean=j.machineClean;
+    document.getElementById('live-txt').textContent='LIVE';
+    badge.classList.remove('demo');
+    const n=new Date();
+    document.getElementById('sync-lbl').textContent='Synced '+n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes()+' WAT';
+  }catch(err){
+    console.warn('[Afritech] Fetch failed, using demo data:',err);
+    document.getElementById('live-txt').textContent='DEMO (offline)';
+    badge.classList.add('demo');
+    RAW=genDemo();
+  }
+  finalise();
+}
+function finalise(){ populateBatches(); rebuildCurrent(); }
+
+/* ── DEMO DATA GENERATOR — Feb 24 to Jun 16 2026 ───────────── */
+function genDemo(){
+  const kpiSales=[],kpiProd=[],salesClean=[],shiftClean=[],machineClean=[];
+  const batches={'SB2':{s:new Date('2026-02-24'),e:new Date('2026-03-28')},'SB3':{s:new Date('2026-03-29'),e:new Date('2026-05-10')},'SB4':{s:new Date('2026-05-11'),e:new Date('2026-06-16')}};
+  const custs=['Outside Car','Hijet 614','Factory Sales','Hijet 706','BENZ 814 (MINNA)','KUTIGI 814','BDGG','YAMA','KTG'];
+  const sps=['Rebecca','Mike','Fati'];
+  const sups=['Muazu Ahmad','Mohammed Kudu','Yahayah'];
+  const ops=['Suleiman','Yahayah'];
+  const machs=['M1','M2','M3','M4','M5','M6'];
+  function getBatch(d){ for(const[b,v] of Object.entries(batches)){if(d>=v.s&&d<=v.e)return b;} return'SB4'; }
+  function rn(a,b){return a+Math.random()*(b-a);}
+  function ri(a,b){return Math.round(rn(a,b));}
+  for(let d=new Date('2026-02-24');d<=new Date('2026-06-16');d.setDate(d.getDate()+1)){
+    const dt=new Date(d); const bch=getBatch(dt); const dow=dt.getDay();
+    const zero=dow===0||Math.random()<0.13; const prod=zero?0:ri(800,4400);
+    const rev=prod>0?prod*rn(188,245):0; const cash=rev*rn(0.43,0.67); const bank=rev-cash;
+    const bags=prod>0?Math.round(prod*rn(1.38,1.78)):0; const avgPr=bags>0?rev/bags:0;
+    const morn=prod*rn(0.61,0.84); const night=prod-morn;
+    const yp=prod>0?rn(90.5,98.8):0;
+    kpiSales.push({Date:dt.toISOString().split('T')[0],Batch_ID:bch,Total_Revenue:Math.round(rev),Cash_Revenue:Math.round(cash),Bank_Revenue:Math.round(bank),Bags_Sold:bags,Avg_Price:+avgPr.toFixed(2),Collection_Rate_Pct:100,Outstanding_Created:0,Top_Customer:custs[ri(0,2)],Top_Sales_Person:sps[ri(0,2)]});
+    kpiProd.push({Date:dt.toISOString().split('T')[0],Batch_ID:bch,Total_Production:prod,Morning_Production:Math.round(morn),Night_Production:Math.round(night),Yield_Pct:+yp.toFixed(1),Film_KG_Total:+(prod/rn(20,26)).toFixed(2),OEE_Pct:prod>0?+rn(14,84).toFixed(1):0,Zero_Production_Flag:zero,NEPA_Available:Math.random()>0.41?'Yes':'No',Generator_Used:Math.random()>0.27?'Yes':'No'});
+    if(!zero){
+      const nTx=ri(2,5);
+      for(let t=0;t<nTx;t++){ const c=custs[ri(0,custs.length-1)]; const sp=sps[ri(0,sps.length-1)]; const qty=ri(100,800); const pr=ri(182,242); const exp=qty*pr; const txC=exp*rn(0.4,0.7); salesClean.push({Reporting_Date:dt.toISOString().split('T')[0],Batch_ID:bch,Customer:c,Sales_Person:sp,Qty_Sold:qty,Price:pr,Expected_Revenue:exp,Amount_Received:exp,Cash:Math.round(txC),Bank:Math.round(exp-txC),Outstanding_Amount:0}); }
+      shiftClean.push({Report_Date:dt.toISOString().split('T')[0],Batch_ID:bch,Supervisor:sups[ri(0,sups.length-1)],Shift:'Morning',Total_Production:Math.round(morn),NEPA_Available:Math.random()>0.41?'Yes':'No',Generator_Used:Math.random()>0.27?'Yes':'No',NEPA_Hours:+rn(0,14).toFixed(1),Gen_Hours:+rn(0,12).toFixed(1)});
+      const nR=ri(2,4);
+      for(let r=0;r<nR;r++){ const mid=machs[ri(0,machs.length-1)]; const op=ops[ri(0,ops.length-1)]; const kg=+rn(10,18).toFixed(2); const out=ri(280,500); const wst=ri(7,28); const yld=+(out/(out+wst)*100).toFixed(1); const sk=+(out/kg).toFixed(1); const eff=sk>=30?'Green':sk>=20?'Amber':'Red'; machineClean.push({Report_Date:dt.toISOString().split('T')[0],Batch_ID:bch,Machine_ID:mid,Operator:op,Output_Sachets:out,Waste_Sachets:wst,KG_Film_Used:kg,Yield_Pct:yld,Efficiency_Sachets_Per_KG:sk,Efficiency_Status:eff,Completion_Status:Math.random()>0.05?'Complete':'Partial',Roll_Type:Math.random()>0.26?'Reload':'Leftover'}); }
+    }
+  }
+  return{kpiSales,kpiProd,salesClean,shiftClean,machineClean};
+}
+
+window.addEventListener('DOMContentLoaded',loadData);
+window.addEventListener('resize',()=>{ if(S.page!=='overview') rebuildCurrent(); });
+</script>
+</body>
+</html>
